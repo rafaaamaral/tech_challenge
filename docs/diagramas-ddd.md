@@ -338,3 +338,13 @@ flowchart LR
     C7 --> E7
     C8 --> E8
 ```
+
+## Imagens PNG Geradas
+
+- [Context Map](./diagramas-ddd-01-context-map.png)
+- [Modelo de Domínio](./diagramas-ddd-02-modelo-de-dominio.png)
+- [Camadas DDD](./diagramas-ddd-03-camadas-ddd.png)
+- [Ciclo de Vida da OS](./diagramas-ddd-04-ciclo-de-vida-da-os.png)
+- [Fluxo Principal da OS](./diagramas-ddd-05-fluxo-principal-da-os.png)
+- [Sequência: Criação e Aprovação da OS](./diagramas-ddd-06-sequencia-criacao-aprovacao-os.png)
+- [Eventos e Comandos](./diagramas-ddd-07-eventos-e-comandos.png)
