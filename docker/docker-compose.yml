@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: user-manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/init.sql
+      - ./init-always.sh:/init-always.sh
+    command: ["/bin/bash", "-c", "docker-entrypoint.sh postgres & sleep 10 && bash /init-always.sh && wait"]
+
+volumes:
+  db_data:
