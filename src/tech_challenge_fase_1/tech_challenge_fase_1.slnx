@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="tech_challenge.API/tech_challenge.API.csproj" Id="fa39b6c2-61ec-4c82-a72b-3fba0bf0d1ba" />
+  <Project Path="tech_challenge.Application/tech_challenge.Application.csproj" Id="45405bd3-2490-4443-8bdd-a4f803599656" />
+  <Project Path="tech_challenge.Domain/tech_challenge.Domain.csproj" Id="b006c40d-1ebf-44af-a105-aaab06a2e8de" />
+  <Project Path="tech_challenge.Infrastructure/tech_challenge.Infrastructure.csproj" Id="abf5d02e-d3bd-475b-aaeb-a2c4e341cd05" />
 </Solution>
