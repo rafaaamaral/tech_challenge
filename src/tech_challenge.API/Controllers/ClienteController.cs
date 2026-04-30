@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using tech_challenge.API.Model.Cliente;
 using tech_challenge.Application.Interfaces.Services;
 
@@ -8,6 +9,7 @@ namespace tech_challenge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Atendimento")]
     public class ClienteController : ControllerBase
     {
         private readonly IClienteService _clienteService;
@@ -33,7 +35,7 @@ namespace tech_challenge.API.Controllers
 
         // POST api/<ClienteController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ClienteViewModel cliente)
+        public async Task<IActionResult> Criar([FromBody] ClienteRequest cliente)
         {
             await _clienteService.AddAsync(cliente.Nome, cliente.Documento, cliente.Contato);
             return Ok();
