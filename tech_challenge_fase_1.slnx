@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/tech_challenge.API/tech_challenge.API.csproj" />
+  <Project Path="src/tech_challenge.Application/tech_challenge.Application.csproj" />
+  <Project Path="src/tech_challenge.Domain/tech_challenge.Domain.csproj" />
+  <Project Path="src/tech_challenge.Infrastructure/tech_challenge.Infrastructure.csproj" />
+</Solution>

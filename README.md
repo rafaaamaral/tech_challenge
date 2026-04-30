@@ -89,28 +89,13 @@ dotnet ef database update -p tech_challenge.Infrastructure -s tech_challenge.API
 ```
 dotnet restore
 ```
-
 ## 🧪 Compilar a solução
-
-Se estiver na raiz do repositório
-
-```
-dotnet build src/tech_challenge_fase_1
-````
-Se estiver na pasta que tenha solution
 ```
 dotnet build
 ````
-
 ## 🏃 Rodar o projeto
-Se estiver na raiz do repositório
-
 ```
-dotnet run --project src/tech_challenge_fase_1/tech_challenge.API
-```
-Se estiver na pasta que tenha solution
-```
-dotnet run --project tech_challenge_fase_1/tech_challenge.API
+dotnet run --project src/tech_challenge.API
 ```
 
 ## 🧰 Comandos úteis
