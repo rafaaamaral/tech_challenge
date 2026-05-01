@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using tech_challenge.Domain.Aggregates.Veiculos;
 using tech_challenge.Domain.Common.Entities;
 
 namespace tech_challenge.Domain.Aggregates.Clientes

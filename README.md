@@ -74,11 +74,11 @@ dotnet tool install --global dotnet-ef --version (versao do EF)
 ## 🚀 Criando uma nova migration
 Execute no diretório raiz do projeto:
 ```
-dotnet ef migrations add NomeDaMigration -p tech_challenge.Infrastructure -s challenge.API
+dotnet ef migrations add NomeDaMigration -p src/tech_challenge.Infrastructure -s src/challenge.API
 ```
 ## 🛠️ Atualizando o banco de dados
 ```
-dotnet ef database update -p tech_challenge.Infrastructure -s tech_challenge.API
+dotnet ef database update -p src/tech_challenge.Infrastructure -s src/tech_challenge.API
 ```
 
 ## Observações
