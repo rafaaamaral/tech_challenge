@@ -7,23 +7,17 @@ namespace tech_challenge.Domain.Common.Enums
 {
     public enum StatusOrdemServico
     {
-        [Description("Criada")]
-        Criada = 1,
-        [Description("Em Avaliação")]
-        EmAvaliacao = 2,
-        [Description("Avaliada")]
-        Avaliada = 3,
-        [Description("Em Aprovação")]
-        EmAprovacao = 4,
-        [Description("Aprovada")]
-        Aprovada = 5,
-        [Description("Reprovada")]
-        Reprovada = 6,
+        [Description("Recebida")]
+        Recebida = 1,
+        [Description("Em diagnóstico")]
+        EmDiagnostico = 2,
+        [Description("Aguardando Aprovação")]
+        AguardandoAprovacao = 3,
         [Description("Em Execução")]
-        EmExecucao = 7,
+        EmExecucao = 4,
         [Description("Finalizada")]
-        Finalizada = 8,
+        Finalizada = 5,
         [Description("Entregue")]
-        Entregue = 9,
+        Entregue = 6,
     }
 }

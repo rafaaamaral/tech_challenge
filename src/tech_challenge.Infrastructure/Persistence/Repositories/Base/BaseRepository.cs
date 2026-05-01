@@ -15,8 +15,11 @@ namespace tech_challenge.Infrastructure.Persistence.Repositories.Base
             _context = context;
             _dbSet = context.Set<T>();
         }
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(int id)
             => await _dbSet.FindAsync(id);
+
+        public async Task<T?> GetByUniqueCodeAsync(Guid uniqueCode)
+            => await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "UniqueCode") == uniqueCode);
 
         public async Task<IEnumerable<T>> GetAllAsync()
             => await _dbSet.AsNoTracking().ToListAsync();
@@ -24,10 +27,11 @@ namespace tech_challenge.Infrastructure.Persistence.Repositories.Base
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
             => await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
 
-        public async Task AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task UpdateAsync(T entity)

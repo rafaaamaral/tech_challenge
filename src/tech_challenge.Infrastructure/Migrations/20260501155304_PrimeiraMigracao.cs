@@ -19,14 +19,15 @@ namespace tech_challenge.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Documento = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Contato = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Documento = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Telefone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,11 +46,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     PrecoUnitario = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     QuantidadeEstoque = table.Column<int>(type: "integer", nullable: false),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,11 +68,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     PrecoBase = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     TempoEstimado = table.Column<int>(type: "integer", nullable: true),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,11 +90,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     Senha = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Perfil = table.Column<int>(type: "integer", nullable: false),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -112,11 +113,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     Modelo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Ano = table.Column<int>(type: "integer", nullable: true),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,11 +145,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     Orcamento_ValorTotal = table.Column<decimal>(type: "numeric", nullable: false),
                     StatusOrcamento = table.Column<int>(type: "integer", nullable: false),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,11 +180,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     Quantidade = table.Column<int>(type: "integer", nullable: false),
                     ValorUnitario = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,11 +214,11 @@ namespace tech_challenge.Infrastructure.Migrations
                     Descricao = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Valor = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     UniqueCode = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
+                    CriadoPor = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AlteradoPor = table.Column<Guid>(type: "uuid", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

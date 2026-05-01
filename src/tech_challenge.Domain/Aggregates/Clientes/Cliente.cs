@@ -4,40 +4,53 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using tech_challenge.Domain.Aggregates.Veiculos;
 using tech_challenge.Domain.Common.Entities;
+using tech_challenge.Domain.Exceptions;
 
 namespace tech_challenge.Domain.Aggregates.Clientes
 {
     public class Cliente : Audit
     {
+        public Cliente() { }
+
         public required string Nome { get; set; }
-        public required string Documento { get; set; }
-        public required string Contato { get; set; }
+        public required Documento Documento { get; set; }
+        public required string Email { get; set; }
+        public string? Telefone { get; set; } = null;
 
-        public void Add(Guid uniqueCode, string nome, string documento, string contato)
+        public static Cliente Criar(string nome, string documento, string email, string? telefone)
         {
-            UniqueCode = uniqueCode;
-            Nome = nome;
-            Documento = documento;
-            Contato = contato;
+            var cliente = new Cliente
+            {
+                UniqueCode = Guid.NewGuid(),
+                Nome = nome,
+                Documento = new Documento(documento),
+                Email = email,
+                Telefone = telefone
+            };
 
-            Validate();
+            cliente.Validate();
+            return cliente;
         }
 
-        public void Update(string nome, string documento, string contato)
+        public void Delete()
+        {
+            Ativo = false;
+        }
+
+        public void Alterar(string nome, string documento, string email, string? telefone)
         {
             Nome = nome;
-            Documento = documento;
-            Contato = contato;
+            Documento = new Documento(documento);
+            Email = email;
+            Telefone = telefone;
         }
 
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(Nome))
-                throw new ArgumentException("O nome do cliente é obrigatório.");
-            if (string.IsNullOrWhiteSpace(Documento))
-                throw new ArgumentException("O documento do cliente é obrigatório.");
-            if (string.IsNullOrWhiteSpace(Contato))
-                throw new ArgumentException("O contato do cliente é obrigatório.");
+                throw new DomainException("O nome do cliente é obrigatório.");
+            if (string.IsNullOrWhiteSpace(Email))
+                throw new DomainException("O email do cliente é obrigatório.");
         }
     }
 }

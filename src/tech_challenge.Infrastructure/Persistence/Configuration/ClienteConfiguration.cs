@@ -14,8 +14,12 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration
             builder.ToTable("Cliente");
 
             builder.Property(c => c.Nome).IsRequired().HasMaxLength(100);
-            builder.Property(c => c.Documento).IsRequired().HasMaxLength(50);
-            builder.Property(c => c.Contato).IsRequired().HasMaxLength(100);
+            builder.OwnsOne(c => c.Documento, d =>
+            {
+                d.Property(p => p.Valor).IsRequired().HasMaxLength(20).HasColumnName("Documento");
+            });
+            builder.Property(c => c.Email).IsRequired().HasMaxLength(100);
+            builder.Property(c => c.Telefone).HasMaxLength(20);
         }
     }
 }

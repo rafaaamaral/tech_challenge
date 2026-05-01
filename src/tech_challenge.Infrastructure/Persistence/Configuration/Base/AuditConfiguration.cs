@@ -11,10 +11,11 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration.Base
             builder.HasKey(e => e.Id);
             builder.Property(c => c.Id).IsRequired().UseIdentityAlwaysColumn();
             builder.Property(c => c.UniqueCode).IsRequired();
-            builder.Property(c => c.IsActive).IsRequired();
-            builder.Property(c => c.CreatedBy).IsRequired();
-            builder.Property(c => c.UpdatedBy);
-            builder.Property(c => c.UpdatedAt);
+            builder.Property(c => c.Ativo).IsRequired();
+            builder.Property(c => c.CriadoPor).IsRequired();
+            builder.Property(c => c.DataCriacao).IsRequired();
+            builder.Property(c => c.AlteradoPor);
+            builder.Property(c => c.DataAlteracao);
         }
     }
 }

@@ -30,37 +30,36 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Contato")
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Telefone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<Guid>("UniqueCode")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -76,17 +75,23 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("ClienteId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid>("CriadoPor")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Numero")
                         .HasColumnType("integer");
@@ -95,12 +100,6 @@ namespace tech_challenge.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("UniqueCode")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
                     b.Property<int>("VeiculoId")
@@ -123,19 +122,25 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("OrdemServicoId")
                         .HasColumnType("integer");
@@ -147,12 +152,6 @@ namespace tech_challenge.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("UniqueCode")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("ValorUnitario")
@@ -175,19 +174,25 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("OrdemServicoId")
                         .HasColumnType("integer");
@@ -196,12 +201,6 @@ namespace tech_challenge.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("UniqueCode")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Valor")
@@ -224,18 +223,24 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -254,12 +259,6 @@ namespace tech_challenge.Infrastructure.Migrations
                     b.Property<Guid>("UniqueCode")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("PecaInsumo", (string)null);
@@ -273,18 +272,24 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -300,12 +305,6 @@ namespace tech_challenge.Infrastructure.Migrations
                     b.Property<Guid>("UniqueCode")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("Servico", (string)null);
@@ -319,14 +318,20 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("AlteradoPor")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid>("CriadoPor")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -349,12 +354,6 @@ namespace tech_challenge.Infrastructure.Migrations
                     b.Property<Guid>("UniqueCode")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("Usuario", (string)null);
@@ -368,20 +367,26 @@ namespace tech_challenge.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("AlteradoPor")
+                        .HasColumnType("uuid");
+
                     b.Property<int?>("Ano")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid>("CriadoPor")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Marca")
                         .IsRequired()
@@ -393,18 +398,7 @@ namespace tech_challenge.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Placa")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
                     b.Property<Guid>("UniqueCode")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -412,6 +406,31 @@ namespace tech_challenge.Infrastructure.Migrations
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Veiculo", (string)null);
+                });
+
+            modelBuilder.Entity("tech_challenge.Domain.Aggregates.Clientes.Cliente", b =>
+                {
+                    b.OwnsOne("tech_challenge.Domain.Aggregates.Clientes.Documento", "Documento", b1 =>
+                        {
+                            b1.Property<int>("ClienteId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("Documento");
+
+                            b1.HasKey("ClienteId");
+
+                            b1.ToTable("Cliente");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ClienteId");
+                        });
+
+                    b.Navigation("Documento")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tech_challenge.Domain.Aggregates.OrdemServicos.OrdemServico", b =>
@@ -494,6 +513,28 @@ namespace tech_challenge.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("tech_challenge.Domain.Aggregates.Veiculos.Placa", "Placa", b1 =>
+                        {
+                            b1.Property<int>("VeiculoId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("Placa");
+
+                            b1.HasKey("VeiculoId");
+
+                            b1.ToTable("Veiculo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VeiculoId");
+                        });
+
+                    b.Navigation("Placa")
                         .IsRequired();
                 });
 

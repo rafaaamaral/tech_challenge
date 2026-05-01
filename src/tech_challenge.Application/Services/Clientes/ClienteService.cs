@@ -1,31 +1,101 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using tech_challenge.Application.Exceptions;
 using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Application.Interfaces.Services;
+using tech_challenge.Application.Services.Base;
+using tech_challenge.Application.Services.Clientes.Model;
+using tech_challenge.Domain.Aggregates.Clientes;
+using tech_challenge.Domain.Aggregates.Usuarios;
+using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Application.Services.Clientes
 {
-    public class ClienteService : IClienteService
+    public class ClienteService : ServiceBase<ClienteService>, IClienteService
     {
         private readonly IClienteRepository _clienteRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public ClienteService(IClienteRepository clienteRepository)
+        public ClienteService(IClienteRepository clienteRepository, IUsuarioRepository usuarioRepository, ILogger<ClienteService> logger) : base(logger)
         {
             _clienteRepository = clienteRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
-        public async Task AddAsync(string nome, string documento, string contato)
+        public async Task<ClienteModel> AddAsync(string nome, string documento, string email, string? telefone)
         {
-            var cliente = new Domain.Aggregates.Clientes.Cliente
-            {
-                UniqueCode = Guid.NewGuid(),
-                Nome = nome,
-                Documento = documento,
-                Contato = contato
-            };
+            _logger.LogInformation("Adicionando cliente: {Nome}", nome);
 
-            await _clienteRepository.AddAsync(cliente);
+            var cliente = Cliente.Criar(nome, documento, email, telefone);
+
+            var result = await _clienteRepository.AddAsync(cliente);
+
+            _logger.LogInformation("Cliente adicionado com UniqueCode: {UniqueCode}", result.UniqueCode);
+
+            _logger.LogInformation("Criando usuário para o cliente com UniqueCode: {UniqueCode}", result.UniqueCode);
+
+            var usuario = Usuario.Criar(cliente.UniqueCode, cliente.Nome, cliente.Email, PerfilUsuario.Cliente);
+
+            await _usuarioRepository.AddAsync(usuario);
+
+            return result.ToModel();
+        }
+
+        public async Task DeletarAsync(Guid uniqueCode)
+        {
+            _logger.LogInformation("Deletando cliente com UniqueCode: {UniqueCode}", uniqueCode);
+
+            var cliente = await _clienteRepository.GetByUniqueCodeAsync(uniqueCode);
+            if (cliente == null)
+            {
+                _logger.LogWarning("Cliente com UniqueCode: {UniqueCode} não encontrado", uniqueCode);
+                throw new NotFoundException("Cliente", uniqueCode);
+            }
+
+            cliente.Delete();
+
+            await _clienteRepository.UpdateAsync(cliente);
+        }
+
+        public async Task<List<ClienteModel>> ListarTodosAsync()
+        {
+            _logger.LogInformation("Listando todos os clientes");
+
+            try
+            {
+                var clientes = await _clienteRepository.GetAllAsync();
+                var clienteModels = new List<ClienteModel>();
+
+                foreach (var cliente in clientes)
+                {
+                    clienteModels.Add(cliente.ToModel());
+                }
+
+                return clienteModels;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar clientes");
+                throw;
+            }
+        }
+
+        public async Task<ClienteModel> ObterPorDocumentoAsync(string documento)
+        {
+            _logger.LogInformation("Obtendo cliente por documento: {Documento}", documento);
+
+            var cliente = await _clienteRepository.FindAsync(c => c.Documento.Valor == documento);
+            if (!cliente.Any())
+            {
+                _logger.LogWarning("Cliente com documento: {Documento} não encontrado", documento);
+                throw new NotFoundException("Cliente", documento);
+            }
+
+            var clienteEntity = cliente.First();
+
+            return clienteEntity.ToModel();
         }
     }
 }
