@@ -12,7 +12,7 @@ namespace tech_challenge.Domain.Aggregates.Clientes
         public Documento(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
-                throw new DomainException("Documento inválido");
+                throw new DomainException("Documento obrigatório.");
 
             var somenteNumeros = Limpar(valor);
 

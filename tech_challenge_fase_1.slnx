@@ -3,4 +3,5 @@
   <Project Path="src/tech_challenge.Application/tech_challenge.Application.csproj" />
   <Project Path="src/tech_challenge.Domain/tech_challenge.Domain.csproj" />
   <Project Path="src/tech_challenge.Infrastructure/tech_challenge.Infrastructure.csproj" />
+  <Project Path="src/tech_challenge.Teste/tech_challenge.Teste.csproj" />
 </Solution>

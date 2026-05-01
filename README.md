@@ -98,6 +98,43 @@ dotnet build
 dotnet run --project src/tech_challenge.API
 ```
 
+## 🧪 Testes Automatizados e Cobertura
+O projeto possui testes automatizados com foco nos domínios críticos, garantindo qualidade e confiabilidade das regras de negócio.
+
+## ▶️ Executando os testes
+
+Para rodar todos os testes:
+```
+dotnet test
+```
+
+## 📊 Gerando cobertura de código
+Para executar os testes com coleta de cobertura:
+```
+dotnet test --collect:"XPlat Code Coverage"
+```
+
+## 📈 Gerando relatório HTML
+Instale a ferramenta de geração de relatório (caso ainda não tenha):
+```
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
+Em seguida, execute:
+```
+reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+```
+
+## 🌐 Visualizando o relatório
+Abra o arquivo:
+```
+coveragereport/index.html
+
+```
+ou execute:
+```
+start coveragereport/index.html
+```
+
 ## 🧰 Comandos úteis
 
 ## 🐳 Docker

@@ -6,6 +6,7 @@ using tech_challenge.API.Middlewares;
 using tech_challenge.API.Services;
 using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Services.DependencyInjection;
+using tech_challenge.Application.Services.Usuarios;
 using tech_challenge.Infrastructure.DependencyInjection;
 using tech_challenge.Infrastructure.Persistence.Context;
 using tech_challenge.Infrastructure.Persistence.Context.Data;

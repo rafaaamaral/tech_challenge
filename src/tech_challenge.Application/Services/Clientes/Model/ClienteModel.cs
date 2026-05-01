@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace tech_challenge.Application.Services.Clientes.Model
 {
+    [ExcludeFromCodeCoverage]
     public class ClienteModel
     {
         public Guid UniqueCode { get; set; }

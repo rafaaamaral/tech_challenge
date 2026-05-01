@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace tech_challenge.Domain.Common.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class Audit : BaseDomain
     {
         public bool Ativo { get; set; }
