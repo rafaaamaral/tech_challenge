@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Domain.Aggregates.Clientes;
+using tech_challenge.Domain.Aggregates.OrdemServicos;
+using tech_challenge.Domain.Aggregates.PecaInsumos;
+using tech_challenge.Domain.Aggregates.Servicos;
 using tech_challenge.Domain.Aggregates.Usuarios;
+using tech_challenge.Domain.Aggregates.Veiculos;
 using tech_challenge.Domain.Common.Entities;
 using tech_challenge.Infrastructure.Persistence.Configuration;
 
@@ -11,7 +15,13 @@ namespace tech_challenge.Infrastructure.Persistence.Context
     {
         private readonly IUsuarioLogadoService _usuarioLogadoService;
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<OrdemServico> OrdemServicos { get; set; }
+        public DbSet<OrdemServicoItemPecaInsumo> OrdemServicoItemPecaInsumos { get; set; }
+        public DbSet<OrdemServicoItemServico> OrdemServicoItemServicos { get; set; }
+        public DbSet<PecaInsumo> PecasInsumos { get; set; }
+        public DbSet<Servico> Servicos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Veiculo> Veiculos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, IUsuarioLogadoService usuarioLogadoService)
             : base(options)
@@ -24,7 +34,13 @@ namespace tech_challenge.Infrastructure.Persistence.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new ClienteConfiguration());
+            modelBuilder.ApplyConfiguration(new OrdemServicoConfiguration());
+            modelBuilder.ApplyConfiguration(new OrdemServicoItemPecaInsumoConfiguration());
+            modelBuilder.ApplyConfiguration(new OrdemServicoItemServicoConfiguration());
+            modelBuilder.ApplyConfiguration(new PecaInsumoConfiguration());
+            modelBuilder.ApplyConfiguration(new ServicoConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
+            modelBuilder.ApplyConfiguration(new VeiculoConfiguration());
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
