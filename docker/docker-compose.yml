@@ -16,6 +16,7 @@ services:
     command: ["/bin/bash", "-c", "docker-entrypoint.sh postgres & sleep 10 && bash /init-always.sh && wait"]
 
   api:
+    image: tech-challenge-api:latest
     container_name: tech_challenge_api
     build:
       context: ..
