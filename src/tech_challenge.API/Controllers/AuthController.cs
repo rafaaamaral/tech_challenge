@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using tech_challenge.API.Requests.Usuarios;
 using tech_challenge.Application.Interfaces.Services;
+using tech_challenge.Application.Services.Usuarios;
 
 namespace tech_challenge.API.Controllers
 {

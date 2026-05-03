@@ -51,15 +51,15 @@ namespace tech_challenge.Infrastructure.Persistence.Context
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.IsActive = true;
-                    entry.Entity.CreatedBy = userId;
+                    entry.Entity.DataCriacao = DateTime.UtcNow;
+                    entry.Entity.Ativo = true;
+                    entry.Entity.CriadoPor = userId;
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = userId;
+                    entry.Entity.DataAlteracao = DateTime.UtcNow;
+                    entry.Entity.AlteradoPor = userId;
                 }
             }
 

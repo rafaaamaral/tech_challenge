@@ -16,7 +16,12 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration
             base.Configure(builder);
 
             builder.ToTable("Veiculo");
-            builder.Property(c => c.Placa).IsRequired().HasMaxLength(10);
+
+            builder.OwnsOne(v => v.Placa, p =>
+            {
+                p.Property(pl => pl.Valor).HasColumnName("Placa").IsRequired().HasMaxLength(10);
+            });
+            //builder.Property(c => c.Placa).IsRequired().HasMaxLength(10);
             builder.Property(c => c.Marca).IsRequired().HasMaxLength(50);
             builder.Property(c => c.Modelo).IsRequired().HasMaxLength(50);
             builder.Property(c => c.Ano).IsRequired(false);

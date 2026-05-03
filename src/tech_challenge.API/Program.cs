@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
+using tech_challenge.API.Middlewares;
 using tech_challenge.API.Services;
 using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Services.DependencyInjection;
+using tech_challenge.Application.Services.Usuarios;
 using tech_challenge.Infrastructure.DependencyInjection;
 using tech_challenge.Infrastructure.Persistence.Context;
 using tech_challenge.Infrastructure.Persistence.Context.Data;
-using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -72,7 +75,11 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Tech Challenge API v1");
+    });
 }
 
 using (var scope = app.Services.CreateScope())
@@ -85,7 +92,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();
