@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace tech_challenge.Application.Services.Veiculos.Model
 {
+    [ExcludeFromCodeCoverage]
     public class VeiculoModel
     {
         public int Id { get; set; }

@@ -99,7 +99,7 @@ dotnet run --project src/tech_challenge.API
 ```
 
 ## 🧪 Testes Automatizados e Cobertura
-O projeto possui testes automatizados com foco nos domínios críticos, garantindo qualidade e confiabilidade das regras de negócio.
+Conforme solicitado no documento, o projeto possui testes automatizados com focos nos domínios críticos
 
 ## ▶️ Executando os testes
 
@@ -111,6 +111,7 @@ dotnet test
 ## 📊 Gerando cobertura de código
 Para executar os testes com coleta de cobertura:
 ```
+Remove-Item -Recurse -Force src/tech_challenge.Teste/TestResults -ErrorAction Ignore
 dotnet test --collect:"XPlat Code Coverage"
 ```
 

@@ -14,6 +14,7 @@ namespace tech_challenge.Application.Services.Clientes
         {
             return new ClienteModel
             {
+                Id = cliente.Id,
                 UniqueCode = cliente.UniqueCode,
                 Nome = cliente.Nome,
                 Documento = cliente.Documento.Valor,

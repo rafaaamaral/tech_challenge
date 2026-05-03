@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace tech_challenge.Application.Services.Servicos.Model
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoModel
     {
         public int Id { get; set; }
