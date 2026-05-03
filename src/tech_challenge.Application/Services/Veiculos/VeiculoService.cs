@@ -22,6 +22,14 @@ namespace tech_challenge.Application.Services.Veiculos
 
             var veiculo = Veiculo.Criar(clienteId, placa, marca, modelo, ano);
 
+            var veiculoExistente = await _veiculoRepository.FindAsync(x => x.Placa.Valor == veiculo.Placa.Valor);
+
+            if (veiculoExistente.Any())
+            {
+                _logger.LogWarning("Veículo com placa {Placa} já existe", placa);
+                throw new InvalidOperationException($"Veículo com placa {placa} já existe.");
+            }
+
             var veiculoAdicionado = _veiculoRepository.AddAsync(veiculo).Result;
 
             _logger.LogInformation("Veículo adicionado com sucesso para o cliente {ClienteId} com placa {Placa}", clienteId, placa);
@@ -60,16 +68,19 @@ namespace tech_challenge.Application.Services.Veiculos
 
         public async Task<VeiculoModel> ObterVeiculoPorPlacaEClienteAsync(int clienteId, string placa)
         {
-            var veiculo = _veiculoRepository.FindAsync(x => x.ClienteId == clienteId 
-            && x.Placa.Valor.ToUpper() == placa.ToUpper()).Result.FirstOrDefault();
+            var veiculo = await _veiculoRepository.FindAsync(x => x.ClienteId == clienteId 
+            && x.Placa.Valor.ToUpper() == placa.ToUpper());
 
-            if (veiculo == null)
+
+
+            if (!veiculo.Any())
             {
                 _logger.LogWarning("Veículo com placa {Placa} para o cliente {ClienteId} não encontrado", placa, clienteId);
                 throw new NotFoundException("Veículo", $"Placa: {placa}, ClienteId: {clienteId}");
             }
 
-            return veiculo.ToModel();
+            var veiculoUnico = veiculo.First();
+            return veiculoUnico.ToModel();
         }
     }
 }

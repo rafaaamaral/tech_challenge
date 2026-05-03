@@ -30,6 +30,14 @@ namespace tech_challenge.Application.Services.Clientes
 
             var cliente = Cliente.Criar(nome, documento, email, telefone);
 
+            var clienteExistente = await _clienteRepository.FindAsync(c => c.Documento.Valor == cliente.Documento.Valor);
+
+            if (clienteExistente.Any())
+            {
+                _logger.LogWarning("Cliente com documento: {Documento} já existe", documento);
+                throw new InvalidOperationException($"Cliente com documento {documento} já existe.");
+            }
+
             var result = await _clienteRepository.AddAsync(cliente);
 
             _logger.LogInformation("Cliente adicionado com UniqueCode: {UniqueCode}", result.UniqueCode);

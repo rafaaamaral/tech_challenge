@@ -35,6 +35,14 @@ namespace tech_challenge.API.Middlewares
                     message = ex.Message
                 });
             }
+            catch(InvalidOperationException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    message = ex.Message,
+                });
+            }
             catch (Exception ex)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
