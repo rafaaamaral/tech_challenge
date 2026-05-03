@@ -28,6 +28,9 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration
                 x.Property(p => p.Status).HasColumnName("StatusOrcamento").HasConversion<int>();
             });
 
+            builder.Property(c => c.InicioExecucao).IsRequired(false);
+            builder.Property(c => c.FimExecucao).IsRequired(false);
+
             builder.HasOne<Cliente>()
                 .WithMany()
                 .HasForeignKey(o => o.ClienteId);

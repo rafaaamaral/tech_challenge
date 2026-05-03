@@ -10,6 +10,6 @@ namespace tech_challenge.Application.Interfaces.Services
         Task<ClienteModel> AddAsync(string nome, string documento, string email, string? telefone);
         Task<List<ClienteModel>> ListarTodosAsync();
         Task<ClienteModel> ObterPorDocumentoAsync(string documento);
-        Task DeletarAsync(Guid uniqueCode);
+        Task DeletarAsync(int id);
     }
 }

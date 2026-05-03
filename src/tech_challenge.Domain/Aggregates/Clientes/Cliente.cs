@@ -23,7 +23,7 @@ namespace tech_challenge.Domain.Aggregates.Clientes
                 Telefone = telefone
             };
 
-            cliente.Validate();
+            cliente.Validar();
             return cliente;
         }
 
@@ -32,7 +32,7 @@ namespace tech_challenge.Domain.Aggregates.Clientes
             Ativo = false;
         }
 
-        private void Validate()
+        private void Validar()
         {
             if (string.IsNullOrWhiteSpace(Nome))
                 throw new DomainException("O nome do cliente é obrigatório.");

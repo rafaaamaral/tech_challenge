@@ -8,6 +8,7 @@ namespace tech_challenge.Application.Services.Clientes.Model
     [ExcludeFromCodeCoverage]
     public class ClienteModel
     {
+        public int Id { get; set; }
         public Guid UniqueCode { get; set; }
         public string Nome { get; set; } = string.Empty;
         public string Documento { get; set; } = string.Empty;

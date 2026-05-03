@@ -8,6 +8,7 @@ using tech_challenge.Application.Interfaces.Repositories.Base;
 using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Application.Services.Clientes;
 using tech_challenge.Application.Services.Usuarios;
+using tech_challenge.Application.Services.Veiculos;
 
 namespace tech_challenge.Application.Services.DependencyInjection
 {
@@ -18,6 +19,7 @@ namespace tech_challenge.Application.Services.DependencyInjection
         {
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IVeiculoService, VeiculoService>();
 
             return services;
         }

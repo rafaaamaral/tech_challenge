@@ -9,7 +9,7 @@ using tech_challenge.Application.Interfaces.Services;
 namespace tech_challenge.API.Controllers
 {
     /// <summary>
-    /// Controller responsável pelo gerenciamento de clientes: Inclusão, Alteração e Exclusão.
+    /// Controller responsável pelo gerenciamento de clientes: Consultas, Inclusão, Alteração e Exclusão.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -26,7 +26,6 @@ namespace tech_challenge.API.Controllers
         /// <summary>
         /// Lista todos os clientes.
         /// </summary>
-        /// <param name="request">Dados para listagem do cliente.</param>
         /// <returns>Lista de clientes.</returns>
         /// <response code="200">Lista de clientes retornada com sucesso.</response>
         /// <response code="500">Erro interno do servidor.</response>
@@ -41,6 +40,7 @@ namespace tech_challenge.API.Controllers
 
             var response = result.Select(c => new ListaClienteResponse
             {
+                Id = c.Id,
                 UniqueCode = c.UniqueCode,
                 Nome = c.Nome,
                 Documento = c.Documento
@@ -108,7 +108,7 @@ namespace tech_challenge.API.Controllers
         /// <summary>
         /// Deleta um cliente.
         /// </summary>
-        /// <param name="uniqueCode">Código único do cliente.</param>
+        /// <param name="id">Id do cliente.</param>
         /// <returns>Resultado da operação.</returns>
         /// <response code="204">Cliente deletado com sucesso.</response>
         /// <response code="404">Cliente não encontrado.</response>
@@ -116,11 +116,11 @@ namespace tech_challenge.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete("{uniqueCode}")]
-        public async Task<IActionResult> Deletar(Guid uniqueCode)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Deletar(int id)
         {
             _logger.LogInformation("Iniciando exclusão de cliente.");
-            await _clienteService.DeletarAsync(uniqueCode);
+            await _clienteService.DeletarAsync(id);
 
             return NoContent();
         }

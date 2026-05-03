@@ -43,15 +43,15 @@ namespace tech_challenge.Application.Services.Clientes
             return result.ToModel();
         }
 
-        public async Task DeletarAsync(Guid uniqueCode)
+        public async Task DeletarAsync(int id)
         {
-            _logger.LogInformation("Deletando cliente com UniqueCode: {UniqueCode}", uniqueCode);
+            _logger.LogInformation("Deletando cliente com Id: {Id}", id);
 
-            var cliente = await _clienteRepository.GetByUniqueCodeAsync(uniqueCode);
+            var cliente = await _clienteRepository.GetByIdAsync(id);
             if (cliente == null)
             {
-                _logger.LogWarning("Cliente com UniqueCode: {UniqueCode} não encontrado", uniqueCode);
-                throw new NotFoundException("Cliente", uniqueCode);
+                _logger.LogWarning("Cliente com Id: {Id} não encontrado", id);
+                throw new NotFoundException("Cliente", id);
             }
 
             cliente.Delete();

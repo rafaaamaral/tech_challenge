@@ -1,4 +1,5 @@
 ﻿using tech_challenge.Application.Exceptions;
+using tech_challenge.Domain.Exceptions;
 
 namespace tech_challenge.API.Middlewares
 {
@@ -21,6 +22,14 @@ namespace tech_challenge.API.Middlewares
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
 
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch(DomainException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsJsonAsync(new
                 {
                     message = ex.Message

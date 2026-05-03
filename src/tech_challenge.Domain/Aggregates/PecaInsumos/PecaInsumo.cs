@@ -9,6 +9,7 @@ namespace tech_challenge.Domain.Aggregates.PecaInsumos
     public class PecaInsumo : Audit
     {
         public required string Nome { get; set; }
+        public required string Codigo { get; set; }
         public string? Descricao { get; set; }
         public TipoPecaInsumo Tipo { get; set; }
         public required decimal PrecoUnitario { get; set; }
