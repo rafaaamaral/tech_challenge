@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Reflection;
 using System.Text;
 using tech_challenge.API.Middlewares;
 using tech_challenge.API.Services;
@@ -38,7 +39,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -47,6 +48,10 @@ builder.Services.AddSwaggerGen(options =>
         Title = "Tech Challenge API",
         Version = "v1"
     });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -75,10 +80,10 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.MapOpenApi();
+    //app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "Tech Challenge API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech Challenge API v1");
     });
 }
 
@@ -91,6 +96,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();

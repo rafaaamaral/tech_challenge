@@ -1,4 +1,5 @@
-﻿using tech_challenge.Application.Interfaces.Repositories;
+﻿using tech_challenge.Application.Exceptions;
+using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Application.Services.Usuarios.Model;
 
@@ -15,6 +16,9 @@ namespace tech_challenge.Application.Services.Usuarios
         public async Task<UsuarioModel> ObterPorEmailAsync(string email)
         {
             var usuario = await _usuarioRepository.ObterPorEmailAsync(email);
+
+            if (usuario == null)
+                throw new NotFoundException("Usuário", email);
 
             return new UsuarioModel
             {

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace tech_challenge.Application.Services.PecaInsumos.Model
 {
+    [ExcludeFromCodeCoverage]
     public class PecaInsumoModel
     {
         public int Id { get; set; }

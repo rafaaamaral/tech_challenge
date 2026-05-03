@@ -13,7 +13,7 @@ namespace tech_challenge.Domain.Aggregates.Veiculos
         public Placa(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
-                throw new DomainException("Placa inválida");
+                throw new DomainException("Placa inválida.");
 
             if(!ValidarPlaca(valor))
                 throw new DomainException("Placa inválida. Formato esperado: AAA1234 ou AAA1A23.");

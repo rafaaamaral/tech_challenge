@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Application.Services.Usuarios.Model
 {
+    [ExcludeFromCodeCoverage]
     public class UsuarioModel
     {
         public Guid UniqueCode { get; set; }
