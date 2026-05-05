@@ -77,5 +77,84 @@ namespace tech_challenge.Teste.Domain
                 .Throw<InvalidOperationException>()
                 .WithMessage("A OS precisa estar aprovada para iniciar execução.");
         }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Gerar_Orcamento_Sem_Itens()
+        {
+            var ordemServico = OrdemServico.Criar(1, 2, 10);
+
+            var act = () => ordemServico.GerarOrcamento();
+
+            act.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("A OS deve possuir ao menos um item para gerar orçamento.");
+        }
+
+        [Fact]
+        public void Deve_Reprovar_Orcamento_Quando_OS_Estiver_Aguardando_Aprovacao()
+        {
+            var ordemServico = OrdemServico.Criar(1, 2, 10);
+            ordemServico.AdicionarServico(1, "Diagnostico", 80);
+            ordemServico.GerarOrcamento();
+
+            ordemServico.ReprovarOrcamento();
+
+            ordemServico.Status.Should().Be(StatusOrdemServico.AguardandoAprovacao);
+            ordemServico.Orcamento.Status.Should().Be(StatusOrcamento.Reprovado);
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Finalizar_OS_Fora_De_Execucao()
+        {
+            var ordemServico = OrdemServico.Criar(1, 2, 10);
+
+            var act = () => ordemServico.FinalizarExecucao();
+
+            act.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("A OS precisa estar em execução para ser finalizada.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Entregar_OS_Nao_Finalizada()
+        {
+            var ordemServico = OrdemServico.Criar(1, 2, 10);
+
+            var act = () => ordemServico.Entregar();
+
+            act.Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("A OS precisa estar finalizada para entregar o veículo.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Valor_Do_Orcamento_For_Negativo()
+        {
+            var act = () => Orcamento.Criar(-1, 0);
+
+            act.Should()
+                .Throw<DomainException>()
+                .WithMessage("O valor dos serviços não pode ser negativo.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Item_Servico_For_Invalido()
+        {
+            var act = () => OrdemServicoItemServico.Criar(0, "Diagnostico", 80);
+
+            act.Should()
+                .Throw<DomainException>()
+                .WithMessage("O serviço é obrigatório.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Item_Peca_Insumo_Tiver_Quantidade_Invalida()
+        {
+            var act = () => OrdemServicoItemPecaInsumo.Criar(1, "Oleo 5W30", 0, 50);
+
+            act.Should()
+                .Throw<DomainException>()
+                .WithMessage("A quantidade da peça ou insumo deve ser maior que zero.");
+        }
     }
 }
