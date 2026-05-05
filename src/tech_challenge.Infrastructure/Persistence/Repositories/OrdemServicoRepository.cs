@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Domain.Aggregates.OrdemServicos;
 using tech_challenge.Infrastructure.Persistence.Context;
@@ -12,6 +10,24 @@ namespace tech_challenge.Infrastructure.Persistence.Repositories
     {
         public OrdemServicoRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<List<OrdemServico>> ListarComItensAsync()
+        {
+            return await _context.OrdemServicos
+                .AsNoTracking()
+                .Include(x => x.ItensServicos)
+                .Include(x => x.ItensPecasInsumos)
+                .ToListAsync();
+        }
+
+        public async Task<OrdemServico?> ObterPorIdComItensAsync(int id)
+        {
+            return await _context.OrdemServicos
+                .AsNoTracking()
+                .Include(x => x.ItensServicos)
+                .Include(x => x.ItensPecasInsumos)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }
