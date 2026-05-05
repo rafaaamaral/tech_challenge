@@ -99,10 +99,11 @@ classDiagram
         +DataCriacao
         +Criar()
         +IniciarDiagnostico()
-        +EnviarOrcamento()
+        +GerarOrcamento()
         +AprovarOrcamento()
+        +ReprovarOrcamento()
         +IniciarExecucao()
-        +Finalizar()
+        +FinalizarExecucao()
         +Entregar()
     }
 
@@ -120,14 +121,13 @@ classDiagram
     }
 
     class Orcamento {
-        +Id
         +ValorServicos
         +ValorPecasInsumos
         +ValorTotal
-        +StatusAprovacao
-        +Gerar()
+        +Status
+        +AtualizarValores()
         +Aprovar()
-        +Rejeitar()
+        +Reprovar()
     }
 
     class Servico {
@@ -156,7 +156,7 @@ classDiagram
     Cliente "1" --> "0..*" Veiculo : possui
     Cliente "1" --> "0..*" OrdemDeServico : solicita
     Veiculo "1" --> "0..*" OrdemDeServico : recebe atendimento
-    OrdemDeServico "1" *-- "1..*" ItemServico : contem
+    OrdemDeServico "1" *-- "0..*" ItemServico : contem
     OrdemDeServico "1" *-- "0..*" ItemPecaInsumo : utiliza
     OrdemDeServico "1" *-- "1" Orcamento : gera
     ItemServico --> Servico : referencia
@@ -221,9 +221,10 @@ Os status oficiais da OS devem ser usados exatamente como definidos na linguagem
 stateDiagram-v2
     [*] --> Recebida: Criar OS
     Recebida --> EmDiagnostico: Iniciar diagnóstico
-    EmDiagnostico --> AguardandoAprovacao: Gerar e enviar orçamento
-    AguardandoAprovacao --> EmExecucao: Cliente aprova orçamento
-    AguardandoAprovacao --> AguardandoAprovacao: Cliente solicita ajuste ou há reparo adicional
+    Recebida --> AguardandoAprovacao: Gerar orçamento
+    EmDiagnostico --> AguardandoAprovacao: Gerar orçamento
+    AguardandoAprovacao --> EmExecucao: Aprovar orçamento
+    AguardandoAprovacao --> AguardandoAprovacao: Reprovar orçamento
     EmExecucao --> AguardandoAprovacao: Reparo adicional identificado
     EmExecucao --> Finalizada: Finalizar execução
     Finalizada --> Entregue: Entregar veículo
@@ -242,18 +243,15 @@ Este fluxo representa a jornada principal desde a identificação do cliente at�
 flowchart TD
     A[Identificar Cliente por CPF/CNPJ]
     B[Cadastrar ou localizar Veículo]
-    C[Incluir Serviços Solicitados]
-    D[Incluir Peças e Insumos necessários]
+    C[Criar OS com serviços, peças ou insumos]
+    D[Iniciar Diagnóstico]
     E[Gerar Orçamento]
-    F[Enviar Orçamento ao Cliente]
+    F[OS Aguardando Aprovação]
     G{Cliente aprovou?}
     H[Iniciar Execução]
-    I[Atualizar Progresso da OS]
-    J{Reparo adicional?}
-    K[Gerar Orçamento Adicional]
-    L[Finalizar Serviços]
-    M[Entregar Veículo]
-    N[Manter OS Aguardando Aprovação]
+    I[Finalizar Execução]
+    J[Entregar Veículo]
+    K[Manter OS Aguardando Aprovação]
 
     A --> B
     B --> C
@@ -262,14 +260,30 @@ flowchart TD
     E --> F
     F --> G
     G -- Sim --> H
-    G -- Não --> N
+    G -- Não --> K
     H --> I
     I --> J
-    J -- Sim --> K
-    K --> F
-    J -- Não --> L
-    L --> M
 ```
+
+## Fluxo Implementado na API
+
+O fluxo disponível na API administrativa usa a rota base `api/OrdemServico` e exige autenticação JWT com perfil de `Atendimento`, seguindo o mesmo padrão dos demais controllers.
+
+| Ação | Endpoint | Resultado principal |
+| --- | --- | --- |
+| Listar OS | `GET api/OrdemServico` | Retorna as ordens de serviço com orçamento e itens. |
+| Consultar OS | `GET api/OrdemServico/{id}` | Retorna uma ordem de serviço com orçamento e itens. |
+| Criar OS | `POST api/OrdemServico` | Cria OS no status `Recebida` com cliente, veículo e itens informados. |
+| Iniciar diagnóstico | `PATCH api/OrdemServico/{id}/iniciar-diagnostico` | Altera a OS de `Recebida` para `EmDiagnostico`. |
+| Gerar orçamento | `PATCH api/OrdemServico/{id}/gerar-orcamento` | Calcula valores e altera a OS para `AguardandoAprovacao`. |
+| Aprovar orçamento | `PATCH api/OrdemServico/{id}/aprovar-orcamento` | Aprova o orçamento e altera a OS para `EmExecucao`. |
+| Reprovar orçamento | `PATCH api/OrdemServico/{id}/reprovar-orcamento` | Reprova o orçamento e mantém a OS em `AguardandoAprovacao`. |
+| Iniciar execução | `PATCH api/OrdemServico/{id}/iniciar-execucao` | Inicia execução quando o orçamento já está aprovado. |
+| Finalizar execução | `PATCH api/OrdemServico/{id}/finalizar-execucao` | Altera a OS de `EmExecucao` para `Finalizada`. |
+| Entregar veículo | `PATCH api/OrdemServico/{id}/entregar` | Altera a OS de `Finalizada` para `Entregue`. |
+| Deletar OS | `DELETE api/OrdemServico/{id}` | Inativa a ordem de serviço. |
+
+Na implementação atual, os serviços, peças e insumos são informados na criação da OS. Não há endpoints separados para adicionar itens após a criação, nem baixa de estoque no fluxo da OS.
 
 ## Sequência: Criação e Aprovação da OS
 
@@ -280,25 +294,21 @@ sequenceDiagram
     participant API as API Administrativa
     participant App as Aplicação
     participant OS as Agregado OrdemDeServico
-    participant Estoque as Estoque
-    participant Notificacao as API de Acompanhamento
 
-    Atendente->>API: Criar OS com cliente, veículo e serviços
+    Atendente->>API: Criar OS com cliente, veículo, serviços, peças e insumos
     API->>App: Executar caso de uso Criar Ordem de Serviço
+    App->>App: Validar cliente, veículo e vínculo entre eles
+    App->>App: Buscar preços no catálogo de serviços, peças e insumos
     App->>OS: Criar OS
     OS-->>App: OS Recebida
 
-    Atendente->>API: Incluir peças e insumos
-    API->>App: Atualizar itens da OS
-    App->>Estoque: Verificar disponibilidade
-    Estoque-->>App: Disponibilidade confirmada
-    App->>OS: Adicionar itens e gerar orçamento
+    Atendente->>API: Gerar orçamento
+    API->>App: Executar caso de uso Gerar Orçamento
+    App->>OS: Gerar orçamento
     OS-->>App: Orçamento Gerado
 
-    App->>Notificacao: Disponibilizar orçamento ao cliente
-    Cliente->>Notificacao: Consultar orçamento
-    Cliente->>Notificacao: Aprovar orçamento
-    Notificacao->>App: Registrar aprovação
+    Cliente->>API: Aprovar orçamento
+    API->>App: Registrar aprovação
     App->>OS: Aprovar orçamento
     OS-->>App: OS Em execução
 ```
@@ -313,9 +323,10 @@ flowchart LR
         C3[Criar Ordem de Serviço]
         C4[Gerar Orçamento]
         C5[Aprovar Orçamento]
-        C6[Iniciar Execução]
-        C7[Finalizar Execução]
-        C8[Entregar Veículo]
+        C6[Reprovar Orçamento]
+        C7[Iniciar Execução]
+        C8[Finalizar Execução]
+        C9[Entregar Veículo]
     end
 
     subgraph Eventos[Eventos de Domínio]
@@ -324,9 +335,10 @@ flowchart LR
         E3[Ordem de Serviço Criada]
         E4[Orçamento Gerado]
         E5[Orçamento Aprovado]
-        E6[Execução Iniciada]
-        E7[Execução Finalizada]
-        E8[Veículo Entregue]
+        E6[Orçamento Reprovado]
+        E7[Execução Iniciada]
+        E8[Execução Finalizada]
+        E9[Veículo Entregue]
     end
 
     C1 --> E1
@@ -337,6 +349,7 @@ flowchart LR
     C6 --> E6
     C7 --> E7
     C8 --> E8
+    C9 --> E9
 ```
 
 ## Imagens PNG Geradas

@@ -13,7 +13,7 @@ A linguagem aqui definida deve ser usada em conversas, histórias de usuário, A
 - **Produto/Sistema:** Sistema Integrado de Atendimento e Execução de Serviços da Oficina
 - **Área de negócio:** Atendimento, diagnóstico, orçamento, execução e entrega de serviços automotivos
 - **Responsáveis pela validação:** Representantes da oficina, equipe de produto e equipe técnica
-- **Última atualização:** 2026-04-28
+- **Última atualização:** 2026-05-05
 
 ## Glossário de Termos
 
@@ -30,7 +30,7 @@ A linguagem aqui definida deve ser usada em conversas, histórias de usuário, A
 | Peça | Item físico usado em um reparo ou manutenção. | Não usar `produto` quando o item for aplicado na OS. | `Adicionar filtro de óleo à OS.` | Deve consumir estoque quando vinculado/confirmado conforme regra do domínio. |
 | Insumo | Material consumível usado na execução do serviço, como óleo, fluido ou graxa. | Não misturar com `peça` quando houver controle separado. | `Incluir óleo 5W30 como insumo da OS.` | Também participa do orçamento e do estoque. |
 | Estoque | Quantidade disponível de peças e insumos para uso nas ordens de serviço. | Não usar `inventário` se o sistema usar `estoque`. | `Verificar estoque antes da execução.` | Deve evitar baixa indevida ou uso sem disponibilidade. |
-| Orçamento | Composição financeira gerada a partir dos serviços, peças e insumos previstos para a OS. | Não usar `cotação` ou `proposta`. | `Orçamento gerado automaticamente.` | Deve ser enviado ao cliente para aprovação. |
+| Orçamento | Composição financeira gerada a partir dos serviços, peças e insumos previstos para a OS. | Não usar `cotação` ou `proposta`. | `Orçamento gerado automaticamente.` | No fluxo implementado, gerar orçamento coloca a OS em `Aguardando aprovação`. |
 | Aprovação do Orçamento | Autorização do cliente para execução dos serviços, peças e insumos orçados. | Não usar `confirmação` quando for autorização formal do cliente. | `Cliente aprovou o orçamento.` | Sem aprovação, a OS não deve avançar para execução. |
 | Reparo Adicional | Serviço, peça ou insumo identificado após diagnóstico ou durante execução e que não fazia parte do orçamento inicial. | Não usar `extra` sem qualificar. | `Reparo adicional enviado para aprovação.` | Deve gerar nova autorização do cliente. |
 | Status da OS | Situação atual da Ordem de Serviço no fluxo operacional. | Não usar `fase` como nome principal. | `Status da OS alterado para Em execução.` | Valores oficiais definidos na seção de regras. |
@@ -70,9 +70,9 @@ A linguagem aqui definida deve ser usada em conversas, histórias de usuário, A
 | Serviço Incluído na OS | Um serviço foi adicionado à OS. | Ordem de Serviço, Serviço |
 | Peça ou Insumo Incluído na OS | Uma peça ou insumo foi associado à OS. | Ordem de Serviço, Peça, Insumo, Estoque |
 | Orçamento Gerado | O orçamento foi calculado automaticamente com base nos serviços, peças e insumos. | Orçamento, Serviço, Peça, Insumo |
-| Orçamento Enviado ao Cliente | O orçamento foi disponibilizado para aprovação do cliente. | Orçamento, Cliente, Aprovação do Orçamento |
+| Orçamento Enviado ao Cliente | O orçamento foi disponibilizado para aprovação do cliente. Evento previsto fora do fluxo atual da API. | Orçamento, Cliente, Aprovação do Orçamento |
 | Orçamento Aprovado | O cliente autorizou a execução do orçamento. | Aprovação do Orçamento, Cliente, Ordem de Serviço |
-| Orçamento Rejeitado | O cliente recusou o orçamento apresentado. | Orçamento, Cliente, Ordem de Serviço |
+| Orçamento Reprovado | O cliente recusou o orçamento apresentado. | Orçamento, Cliente, Ordem de Serviço |
 | OS Recebida | A OS entrou no status `Recebida`. | Ordem de Serviço, Status da OS |
 | Diagnóstico Iniciado | A OS entrou em avaliação técnica. | Diagnóstico, Mecânico, Status da OS |
 | OS Aguardando Aprovação | A OS aguarda autorização do cliente. | Status da OS, Aprovação do Orçamento |
@@ -80,7 +80,7 @@ A linguagem aqui definida deve ser usada em conversas, histórias de usuário, A
 | Reparo Adicional Identificado | Foi encontrada necessidade de serviço, peça ou insumo adicional. | Diagnóstico, Reparo Adicional, Orçamento |
 | Execução Finalizada | Os serviços da OS foram concluídos. | Ordem de Serviço, Status da OS |
 | Veículo Entregue | O veículo foi devolvido ao cliente e a OS chegou ao status final. | Veículo, Cliente, Entregue |
-| Estoque Baixado | A quantidade de peça ou insumo foi reduzida após uso na OS. | Estoque, Peça, Insumo |
+| Estoque Baixado | A quantidade de peça ou insumo foi reduzida após uso na OS. Evento previsto fora do fluxo atual da API. | Estoque, Peça, Insumo |
 
 ## Comandos ou Ações Relacionadas
 
@@ -91,26 +91,43 @@ A linguagem aqui definida deve ser usada em conversas, histórias de usuário, A
 | Atualizar Cliente | Alterar dados cadastrais do cliente. | Cliente |
 | Cadastrar Veículo | Registrar veículo vinculado a um cliente. | Veículo, Cliente, Placa |
 | Atualizar Veículo | Alterar dados do veículo. | Veículo |
-| Criar Ordem de Serviço | Abrir uma nova OS para um cliente e veículo. | Ordem de Serviço, Cliente, Veículo |
-| Incluir Serviço | Adicionar serviço solicitado ou identificado à OS. | Serviço, Ordem de Serviço |
-| Incluir Peça ou Insumo | Adicionar peça ou insumo necessário à OS. | Peça, Insumo, Estoque, Ordem de Serviço |
+| Criar Ordem de Serviço | Abrir uma nova OS para um cliente e veículo, informando ao menos um serviço, peça ou insumo no fluxo atual da API. | Ordem de Serviço, Cliente, Veículo |
+| Incluir Serviço | Adicionar serviço solicitado ou identificado à OS. No fluxo atual, isso ocorre na criação da OS. | Serviço, Ordem de Serviço |
+| Incluir Peça ou Insumo | Adicionar peça ou insumo necessário à OS. No fluxo atual, isso ocorre na criação da OS. | Peça, Insumo, Estoque, Ordem de Serviço |
 | Gerar Orçamento | Calcular o valor da OS com base em serviços, peças e insumos. | Orçamento, Serviço, Peça, Insumo |
-| Enviar Orçamento | Disponibilizar orçamento ao cliente para aprovação. | Orçamento, Cliente |
+| Enviar Orçamento | Disponibilizar orçamento ao cliente para aprovação. No fluxo atual, não há endpoint separado; a OS fica `Aguardando aprovação` ao gerar orçamento. | Orçamento, Cliente |
 | Aprovar Orçamento | Registrar autorização do cliente. | Aprovação do Orçamento, Cliente |
-| Rejeitar Orçamento | Registrar recusa do cliente. | Orçamento, Cliente |
+| Reprovar Orçamento | Registrar recusa do cliente. | Orçamento, Cliente |
 | Iniciar Diagnóstico | Alterar a OS para `Em diagnóstico`. | Diagnóstico, Status da OS |
 | Iniciar Execução | Alterar a OS para `Em execução` após aprovação necessária. | Execução, Status da OS |
 | Finalizar Execução | Alterar a OS para `Finalizada`. | Status da OS, Ordem de Serviço |
 | Entregar Veículo | Registrar entrega do veículo e alterar OS para `Entregue`. | Veículo, Cliente, Status da OS |
-| Consultar Progresso da OS | Permitir que o cliente acompanhe o status e progresso da OS. | API de Acompanhamento, Status da OS |
+| Consultar Progresso da OS | Permitir que o cliente acompanhe o status e progresso da OS. Fora do fluxo atual da API administrativa. | API de Acompanhamento, Status da OS |
 | Gerenciar Estoque | Criar, atualizar, listar e controlar peças e insumos disponíveis. | Estoque, Peça, Insumo |
 | Monitorar Tempo Médio | Consultar métrica de duração média da execução dos serviços. | Tempo Médio de Execução, Serviço |
+
+## Fluxo Implementado na API
+
+O fluxo atual da API administrativa de Ordem de Serviço (OS) usa a rota base `api/OrdemServico`.
+
+| Ordem | Ação implementada | Resultado |
+| --- | --- | --- |
+| 1 | Criar Ordem de Serviço | Cria a OS como `Recebida`, validando cliente, veículo e vínculo entre eles. Os itens são informados na criação. |
+| 2 | Iniciar Diagnóstico | Altera a OS de `Recebida` para `Em diagnóstico`. |
+| 3 | Gerar Orçamento | Calcula valores e altera a OS para `Aguardando aprovação`. |
+| 4 | Aprovar Orçamento | Aprova o orçamento e inicia a execução da OS. |
+| 5 | Reprovar Orçamento | Reprova o orçamento; a OS permanece em `Aguardando aprovação`. |
+| 6 | Iniciar Execução | Disponível para OS com orçamento já aprovado. |
+| 7 | Finalizar Execução | Altera a OS para `Finalizada`. |
+| 8 | Entregar Veículo | Altera a OS para `Entregue`. |
+
+Fora do escopo implementado neste momento: endpoints separados para adicionar itens após a criação da OS, baixa/reserva de estoque e API de acompanhamento do cliente.
 
 ## Dúvidas em Aberto
 
 - A placa deve aceitar somente o padrão Mercosul ou também o padrão antigo brasileiro?
 - A baixa de estoque deve ocorrer ao incluir peça/insumo na OS, ao aprovar orçamento ou ao iniciar/finalizar execução?
-- O cliente pode rejeitar parcialmente um orçamento, aprovando alguns serviços e recusando outros?
+- O cliente pode reprovar parcialmente um orçamento, aprovando alguns serviços e recusando outros?
 - Reparos adicionais devem gerar um novo orçamento separado ou uma nova versão do orçamento da mesma OS?
 - A API de acompanhamento do cliente exigirá autenticação própria ou consulta por identificador seguro da OS?
 - O tempo médio de execução será calculado por serviço, por mecânico, por OS ou por combinação desses critérios?
