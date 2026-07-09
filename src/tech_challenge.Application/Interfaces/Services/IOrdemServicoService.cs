@@ -1,4 +1,5 @@
 using tech_challenge.Application.Services.OrdemServicos.Model;
+using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Application.Interfaces.Services
 {
@@ -21,6 +22,7 @@ namespace tech_challenge.Application.Interfaces.Services
         Task<OrdemServicoModel> EntregarAsync(int id);
         Task<OrdemServicoModel> ConsultarStatusAsync(Guid uniqueCode);
         Task<List<OrdemServicoModel>> ListarPorClienteAsync();
+        Task AlterarStatusOrcamentoAsync(Guid uniqueCode, StatusOrcamento status);
         Task DeletarAsync(int id);
     }
 }

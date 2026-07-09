@@ -6,6 +6,7 @@ using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Application.Services.Base;
 using tech_challenge.Application.Services.OrdemServicos.Model;
 using tech_challenge.Domain.Aggregates.OrdemServicos;
+using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Application.Services.OrdemServicos
 {
@@ -202,6 +203,29 @@ namespace tech_challenge.Application.Services.OrdemServicos
             var clienteId = _usuarioLogadoService.UniqueCode ?? throw new UnauthorizedAccessException("Você não tem permissão para acessar esta ordem de serviço.");
             var ordensServico = await _ordemServicoRepository.ListarPorClienteAsync(clienteId);
             return ordensServico.Select(x => x.ToModel()).ToList();
+        }
+
+        public async Task AlterarStatusOrcamentoAsync(Guid uniqueCode, StatusOrcamento status)
+        {
+            var ordemServico = await _ordemServicoRepository.ObterPorUniqueCodeAsync(uniqueCode);
+            if (ordemServico == null)
+                throw new NotFoundException("Ordem de Serviço", uniqueCode);
+
+            if (ordemServico.Cliente.UniqueCode != _usuarioLogadoService.UniqueCode)
+                throw new UnauthorizedAccessException("Você não tem permissão para acessar esta ordem de serviço.");
+            switch (status)
+            {
+                case StatusOrcamento.Aprovado:
+                    ordemServico.AprovarOrcamento();
+                    ordemServico.IniciarExecucao();
+                    break;
+                case StatusOrcamento.Reprovado:
+                    ordemServico.ReprovarOrcamento();
+                    break;
+                default:
+                    throw new InvalidOperationException("Status de orçamento inválido.");
+            }
+            await _ordemServicoRepository.UpdateAsync(ordemServico);
         }
     }
 }
