@@ -19,6 +19,8 @@ namespace tech_challenge.Application.Interfaces.Services
         Task<OrdemServicoModel> IniciarExecucaoAsync(int id);
         Task<OrdemServicoModel> FinalizarExecucaoAsync(int id);
         Task<OrdemServicoModel> EntregarAsync(int id);
+        Task<OrdemServicoModel> ConsultarStatusAsync(Guid uniqueCode);
+        Task<List<OrdemServicoModel>> ListarPorClienteAsync();
         Task DeletarAsync(int id);
     }
 }

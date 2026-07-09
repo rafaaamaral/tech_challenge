@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Exceptions;
 using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Application.Services.OrdemServicos;
@@ -20,6 +21,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
         private readonly Mock<IVeiculoRepository> _veiculoRepositoryMock;
         private readonly Mock<IServicoRepository> _servicoRepositoryMock;
         private readonly Mock<IPecaInsumoRepository> _pecaInsumoRepositoryMock;
+        private readonly Mock<IUsuarioLogadoService> _usuarioLogadoServiceMock;
         private readonly Mock<ILogger<OrdemServicoService>> _loggerMock;
         private readonly OrdemServicoService _service;
 
@@ -38,6 +40,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
                 _veiculoRepositoryMock.Object,
                 _servicoRepositoryMock.Object,
                 _pecaInsumoRepositoryMock.Object,
+                _usuarioLogadoServiceMock.Object,
                 _loggerMock.Object
             );
         }

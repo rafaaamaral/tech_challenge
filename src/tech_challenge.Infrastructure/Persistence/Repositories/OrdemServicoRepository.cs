@@ -21,6 +21,17 @@ namespace tech_challenge.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<OrdemServico>> ListarPorClienteAsync(Guid clienteUniqueCode)
+        {
+            return await _context.OrdemServicos
+                .AsNoTracking()
+                .Include(x => x.ItensServicos)
+                .Include(x => x.ItensPecasInsumos)
+                .Include(x => x.Cliente)
+                .Where(x => x.Cliente.UniqueCode == clienteUniqueCode)
+                .ToListAsync();
+        }
+
         public async Task<OrdemServico?> ObterPorIdComItensAsync(int id)
         {
             return await _context.OrdemServicos
@@ -28,6 +39,14 @@ namespace tech_challenge.Infrastructure.Persistence.Repositories
                 .Include(x => x.ItensServicos)
                 .Include(x => x.ItensPecasInsumos)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<OrdemServico?> ObterPorUniqueCodeAsync(Guid uniqueCode)
+        {
+            return await _context.OrdemServicos
+                .AsNoTracking()
+                .Include(x => x.Cliente)
+                .FirstOrDefaultAsync(x => x.UniqueCode == uniqueCode);
         }
     }
 }

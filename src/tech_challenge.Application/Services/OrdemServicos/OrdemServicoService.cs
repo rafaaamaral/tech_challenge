@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Exceptions;
 using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Application.Interfaces.Services;
@@ -15,6 +16,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
         private readonly IVeiculoRepository _veiculoRepository;
         private readonly IServicoRepository _servicoRepository;
         private readonly IPecaInsumoRepository _pecaInsumoRepository;
+        private readonly IUsuarioLogadoService _usuarioLogadoService;
 
         public OrdemServicoService(
             IOrdemServicoRepository ordemServicoRepository,
@@ -22,6 +24,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
             IVeiculoRepository veiculoRepository,
             IServicoRepository servicoRepository,
             IPecaInsumoRepository pecaInsumoRepository,
+            IUsuarioLogadoService usuarioLogadoService,
             ILogger<OrdemServicoService> logger) : base(logger)
         {
             _ordemServicoRepository = ordemServicoRepository;
@@ -29,6 +32,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
             _veiculoRepository = veiculoRepository;
             _servicoRepository = servicoRepository;
             _pecaInsumoRepository = pecaInsumoRepository;
+            _usuarioLogadoService = usuarioLogadoService;
         }
 
         public async Task<OrdemServicoModel> CriarAsync(
@@ -179,6 +183,25 @@ namespace tech_challenge.Application.Services.OrdemServicos
                 throw new NotFoundException("Ordem de Serviço", id);
 
             return ordemServico;
+        }
+
+        public async Task<OrdemServicoModel> ConsultarStatusAsync(Guid uniqueCode)
+        {
+            var ordemServico = await _ordemServicoRepository.ObterPorUniqueCodeAsync(uniqueCode);
+            if (ordemServico == null)
+                throw new NotFoundException("Ordem de Serviço", uniqueCode);
+
+            if (ordemServico.Cliente.UniqueCode != _usuarioLogadoService.UniqueCode)
+                throw new UnauthorizedAccessException("Você não tem permissão para acessar esta ordem de serviço.");
+
+            return ordemServico.ToModel();
+        }
+
+        public async Task<List<OrdemServicoModel>> ListarPorClienteAsync()
+        {
+            var clienteId = _usuarioLogadoService.UniqueCode ?? throw new UnauthorizedAccessException("Você não tem permissão para acessar esta ordem de serviço.");
+            var ordensServico = await _ordemServicoRepository.ListarPorClienteAsync(clienteId);
+            return ordensServico.Select(x => x.ToModel()).ToList();
         }
     }
 }
