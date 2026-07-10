@@ -1,3 +1,4 @@
+using tech_challenge.Domain.Aggregates.Clientes;
 using tech_challenge.Domain.Common.Entities;
 using tech_challenge.Domain.Common.Enums;
 using tech_challenge.Domain.Exceptions;
@@ -17,6 +18,7 @@ namespace tech_challenge.Domain.Aggregates.OrdemServicos
         public DateTime? InicioExecucao { get; private set; }
         public DateTime? FimExecucao { get; private set; }
 
+        public Cliente Cliente { get; private set; } = null!;
         public ICollection<OrdemServicoItemServico> ItensServicos { get; set; } = new List<OrdemServicoItemServico>();
         public ICollection<OrdemServicoItemPecaInsumo> ItensPecasInsumos { get; set; } = new List<OrdemServicoItemPecaInsumo>();
 

@@ -191,6 +191,36 @@ namespace tech_challenge.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Consulta Status de uma Ordem de Serviço por UniqueCode.
+        /// </summary>
+        [Authorize(Roles = "Cliente,Atendimento")]
+        [HttpGet("{uniqueCode:guid}/status")]
+        public async Task<IActionResult> ConsultarStatus(Guid uniqueCode)
+        {
+            var result = await _ordemServicoService.ConsultarStatusAsync(uniqueCode);
+            var response = new OrdemServicoStatusResponse
+            {
+                UniqueCode = result.UniqueCode,
+                Numero = result.Numero,
+                Status = result.Status.ToString(),
+            };
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Consulta Todas ordem de serviço de um cliente por UniqueCode.
+        /// </summary>
+        [Authorize(Roles = "Cliente")]
+        [HttpGet("ordem-servico/minhas")]
+        public async Task<IActionResult> ListarPorCliente()
+        {
+            var result = await _ordemServicoService.ListarPorClienteAsync();
+            var response = result.Select(x => MapearResponse(x)).ToList();
+            return Ok(response);
+        }
+
         private static OrdemServicoResponse MapearResponse(OrdemServicoModel model)
         {
             return new OrdemServicoResponse
