@@ -31,7 +31,7 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration
             builder.Property(c => c.InicioExecucao).IsRequired(false);
             builder.Property(c => c.FimExecucao).IsRequired(false);
 
-            builder.HasOne<Cliente>()
+            builder.HasOne(x => x.Cliente)
                 .WithMany()
                 .HasForeignKey(o => o.ClienteId);
 

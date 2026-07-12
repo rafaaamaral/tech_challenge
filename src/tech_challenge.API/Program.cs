@@ -11,6 +11,7 @@ using tech_challenge.Application.Services.Usuarios;
 using tech_challenge.Infrastructure.DependencyInjection;
 using tech_challenge.Infrastructure.Persistence.Context;
 using tech_challenge.Infrastructure.Persistence.Context.Data;
+using tech_challenge.Infrastructure.Services.Email;
 
 public partial class Program
 {
@@ -75,6 +76,7 @@ public partial class Program
         builder.Services.AddScoped<TokenService>();
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IUsuarioLogadoService, UsuarioLogadoService>();
+        builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.SectionName));
 
         var app = builder.Build();
         app.UseAuthentication();

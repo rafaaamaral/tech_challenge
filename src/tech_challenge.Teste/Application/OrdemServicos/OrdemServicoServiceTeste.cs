@@ -3,6 +3,7 @@ using Moq;
 using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Exceptions;
 using tech_challenge.Application.Interfaces.Repositories;
+using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Application.Services.OrdemServicos;
 using tech_challenge.Application.Services.OrdemServicos.Model;
 using tech_challenge.Domain.Aggregates.Clientes;
@@ -22,6 +23,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
         private readonly Mock<IServicoRepository> _servicoRepositoryMock;
         private readonly Mock<IPecaInsumoRepository> _pecaInsumoRepositoryMock;
         private readonly Mock<IUsuarioLogadoService> _usuarioLogadoServiceMock;
+        private readonly Mock<IEmailService> _emailServiceMock;
         private readonly Mock<ILogger<OrdemServicoService>> _loggerMock;
         private readonly OrdemServicoService _service;
 
@@ -32,6 +34,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
             _veiculoRepositoryMock = new Mock<IVeiculoRepository>();
             _servicoRepositoryMock = new Mock<IServicoRepository>();
             _pecaInsumoRepositoryMock = new Mock<IPecaInsumoRepository>();
+            _emailServiceMock = new Mock<IEmailService>();
             _loggerMock = new Mock<ILogger<OrdemServicoService>>();
 
             _service = new OrdemServicoService(
@@ -41,6 +44,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
                 _servicoRepositoryMock.Object,
                 _pecaInsumoRepositoryMock.Object,
                 _usuarioLogadoServiceMock.Object,
+                _emailServiceMock.Object,
                 _loggerMock.Object
             );
         }

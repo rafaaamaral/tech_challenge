@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using tech_challenge.Application.Services.Clientes.Model;
 using tech_challenge.Application.Services.OrdemServicos.Model;
 using tech_challenge.Domain.Aggregates.OrdemServicos;
 
@@ -41,7 +42,14 @@ namespace tech_challenge.Application.Services.OrdemServicos
                     Quantidade = x.Quantidade,
                     ValorUnitario = x.ValorUnitario,
                     ValorTotal = x.ObterValorTotal()
-                }).ToList()
+                }).ToList(),
+                Cliente = new ClienteModel
+                {
+                    Id = ordemServico.Cliente.Id,
+                    Nome = ordemServico.Cliente.Nome,
+                    Email = ordemServico.Cliente.Email,
+                    Telefone = ordemServico.Cliente.Telefone
+                }
             };
         }
     }
