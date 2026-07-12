@@ -1,3 +1,4 @@
+using tech_challenge.Application.Services.Clientes.Model;
 using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Application.Services.OrdemServicos.Model
@@ -13,6 +14,8 @@ namespace tech_challenge.Application.Services.OrdemServicos.Model
         public OrcamentoModel Orcamento { get; set; } = new OrcamentoModel();
         public DateTime? InicioExecucao { get; set; }
         public DateTime? FimExecucao { get; set; }
+
+        public ClienteModel Cliente { get; set; } = new ClienteModel();
         public List<OrdemServicoItemServicoModel> ItensServicos { get; set; } = new List<OrdemServicoItemServicoModel>();
         public List<OrdemServicoItemPecaInsumoModel> ItensPecasInsumos { get; set; } = new List<OrdemServicoItemPecaInsumoModel>();
     }

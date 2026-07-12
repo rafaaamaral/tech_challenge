@@ -5,6 +5,7 @@ using tech_challenge.API.Requests.OrdemServicos;
 using tech_challenge.API.Responses.OrdemServicos;
 using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Application.Services.OrdemServicos.Model;
+using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.API.Controllers
 {
@@ -13,7 +14,6 @@ namespace tech_challenge.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Atendimento")]
     public class OrdemServicoController : BaseController<OrdemServicoController>
     {
         private readonly IOrdemServicoService _ordemServicoService;
@@ -27,6 +27,7 @@ namespace tech_challenge.API.Controllers
         /// Lista todas as ordens de serviço.
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(List<OrdemServicoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ListarTodos()
@@ -41,6 +42,7 @@ namespace tech_challenge.API.Controllers
         /// Obter ordem de serviço por Id.
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Atendimento, Cliente")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -56,6 +58,7 @@ namespace tech_challenge.API.Controllers
         /// Cria uma nova ordem de serviço.
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,6 +87,7 @@ namespace tech_challenge.API.Controllers
         /// Inicia o diagnóstico da ordem de serviço.
         /// </summary>
         [HttpPatch("{id}/iniciar-diagnostico")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -98,6 +102,7 @@ namespace tech_challenge.API.Controllers
         /// Gera o orçamento e coloca a ordem de serviço aguardando aprovação.
         /// </summary>
         [HttpPatch("{id}/gerar-orcamento")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -112,6 +117,7 @@ namespace tech_challenge.API.Controllers
         /// Aprova o orçamento e inicia a execução da ordem de serviço.
         /// </summary>
         [HttpPatch("{id}/aprovar-orcamento")]
+        [Authorize(Roles = "Cliente, Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -126,6 +132,7 @@ namespace tech_challenge.API.Controllers
         /// Reprova o orçamento da ordem de serviço.
         /// </summary>
         [HttpPatch("{id}/reprovar-orcamento")]
+        [Authorize(Roles = "Cliente, Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -140,6 +147,7 @@ namespace tech_challenge.API.Controllers
         /// Inicia a execução da ordem de serviço aprovada.
         /// </summary>
         [HttpPatch("{id}/iniciar-execucao")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -154,6 +162,7 @@ namespace tech_challenge.API.Controllers
         /// Finaliza a execução da ordem de serviço.
         /// </summary>
         [HttpPatch("{id}/finalizar-execucao")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -168,6 +177,7 @@ namespace tech_challenge.API.Controllers
         /// Registra a entrega do veículo.
         /// </summary>
         [HttpPatch("{id}/entregar")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(typeof(OrdemServicoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -182,6 +192,7 @@ namespace tech_challenge.API.Controllers
         /// Deleta uma ordem de serviço.
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Atendimento")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -219,6 +230,14 @@ namespace tech_challenge.API.Controllers
             var result = await _ordemServicoService.ListarPorClienteAsync();
             var response = result.Select(x => MapearResponse(x)).ToList();
             return Ok(response);
+        }
+
+        [HttpGet("orcamentos/aprovacao")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AprovarViaEmail(Guid uniqueCode, StatusOrcamento status)
+        {
+            await _ordemServicoService.AlterarStatusOrcamentoAsync(uniqueCode, status);
+            return NoContent();
         }
 
         private static OrdemServicoResponse MapearResponse(OrdemServicoModel model)

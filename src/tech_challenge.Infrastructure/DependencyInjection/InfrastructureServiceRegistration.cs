@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using tech_challenge.Application.Interfaces.Repositories;
 using tech_challenge.Application.Interfaces.Repositories.Base;
+using tech_challenge.Application.Interfaces.Services;
 using tech_challenge.Infrastructure.Persistence.Context;
 using tech_challenge.Infrastructure.Persistence.Repositories;
 using tech_challenge.Infrastructure.Persistence.Repositories.Base;
+using tech_challenge.Infrastructure.Services.Email;
 
 namespace tech_challenge.Infrastructure.DependencyInjection
 {
@@ -23,6 +25,7 @@ namespace tech_challenge.Infrastructure.DependencyInjection
             services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
             services.AddScoped<IServicoRepository, ServicoRepository>();
             services.AddScoped<IPecaInsumoRepository, PecaInsumoRepository>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }

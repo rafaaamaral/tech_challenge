@@ -439,7 +439,7 @@ namespace tech_challenge.Infrastructure.Migrations
 
                             b1.HasKey("ClienteId");
 
-                            b1.ToTable("Cliente");
+                            b1.ToTable("Cliente", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ClienteId");
@@ -483,7 +483,7 @@ namespace tech_challenge.Infrastructure.Migrations
 
                             b1.HasKey("OrdemServicoId");
 
-                            b1.ToTable("OrdemServico");
+                            b1.ToTable("OrdemServico", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrdemServicoId");
@@ -544,7 +544,7 @@ namespace tech_challenge.Infrastructure.Migrations
 
                             b1.HasKey("VeiculoId");
 
-                            b1.ToTable("Veiculo");
+                            b1.ToTable("Veiculo", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("VeiculoId");

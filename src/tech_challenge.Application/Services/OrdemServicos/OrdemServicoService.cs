@@ -18,7 +18,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
         private readonly IServicoRepository _servicoRepository;
         private readonly IPecaInsumoRepository _pecaInsumoRepository;
         private readonly IUsuarioLogadoService _usuarioLogadoService;
-
+        private readonly IEmailService _emailService;
         public OrdemServicoService(
             IOrdemServicoRepository ordemServicoRepository,
             IClienteRepository clienteRepository,
@@ -26,6 +26,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
             IServicoRepository servicoRepository,
             IPecaInsumoRepository pecaInsumoRepository,
             IUsuarioLogadoService usuarioLogadoService,
+            IEmailService emailService,
             ILogger<OrdemServicoService> logger) : base(logger)
         {
             _ordemServicoRepository = ordemServicoRepository;
@@ -34,6 +35,7 @@ namespace tech_challenge.Application.Services.OrdemServicos
             _servicoRepository = servicoRepository;
             _pecaInsumoRepository = pecaInsumoRepository;
             _usuarioLogadoService = usuarioLogadoService;
+            _emailService = emailService;
         }
 
         public async Task<OrdemServicoModel> CriarAsync(
@@ -111,7 +113,16 @@ namespace tech_challenge.Application.Services.OrdemServicos
             var ordemServico = await ObterComItensOuFalharAsync(id);
             ordemServico.GerarOrcamento();
             await _ordemServicoRepository.UpdateAsync(ordemServico);
-            return await ObterPorIdAsync(id);
+            var orcamentoModel = await ObterPorIdAsync(id);
+            try
+            {
+                await _emailService.EnviarEmailAprovacaoOrcamentoAsync(orcamentoModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao enviar e-mail de aprovação da OS {Id}", ordemServico.Id);
+            }
+            return orcamentoModel;
         }
 
         public async Task<OrdemServicoModel> AprovarOrcamentoAsync(int id)
@@ -211,8 +222,6 @@ namespace tech_challenge.Application.Services.OrdemServicos
             if (ordemServico == null)
                 throw new NotFoundException("Ordem de Serviço", uniqueCode);
 
-            if (ordemServico.Cliente.UniqueCode != _usuarioLogadoService.UniqueCode)
-                throw new UnauthorizedAccessException("Você não tem permissão para acessar esta ordem de serviço.");
             switch (status)
             {
                 case StatusOrcamento.Aprovado:
