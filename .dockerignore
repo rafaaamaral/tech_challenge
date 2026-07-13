@@ -1,0 +1,12 @@
+.git
+.github
+.tools
+artifacts
+coveragereport
+**/bin
+**/obj
+**/TestResults
+*.user
+*.suo
+*.nupkg
+*.snupkg
