@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 10.0.x
+  SOLUTION_FILE: tech_challenge_fase_1.slnx
+  TEST_RESULTS_DIR: TestResults
+  COVERAGE_REPORT_DIR: coveragereport
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
+
+      - name: Test with coverage
+        run: >
+          dotnet test ${{ env.SOLUTION_FILE }}
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ${{ env.TEST_RESULTS_DIR }}
+          --collect:"XPlat Code Coverage"
+
+      - name: Install coverage report generator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Generate coverage report
+        run: >
+          reportgenerator
+          -reports:"${{ env.TEST_RESULTS_DIR }}/**/coverage.cobertura.xml"
+          -targetdir:"${{ env.COVERAGE_REPORT_DIR }}"
+          -reporttypes:"Html;Cobertura"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results
+          path: ${{ env.TEST_RESULTS_DIR }}
+          if-no-files-found: error
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-report
+          path: ${{ env.COVERAGE_REPORT_DIR }}
+          if-no-files-found: error

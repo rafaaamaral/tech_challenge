@@ -34,6 +34,7 @@ namespace tech_challenge.Teste.Application.OrdemServicos
             _veiculoRepositoryMock = new Mock<IVeiculoRepository>();
             _servicoRepositoryMock = new Mock<IServicoRepository>();
             _pecaInsumoRepositoryMock = new Mock<IPecaInsumoRepository>();
+            _usuarioLogadoServiceMock = new Mock<IUsuarioLogadoService>();
             _emailServiceMock = new Mock<IEmailService>();
             _loggerMock = new Mock<ILogger<OrdemServicoService>>();
 

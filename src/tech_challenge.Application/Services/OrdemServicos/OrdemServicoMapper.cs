@@ -43,13 +43,15 @@ namespace tech_challenge.Application.Services.OrdemServicos
                     ValorUnitario = x.ValorUnitario,
                     ValorTotal = x.ObterValorTotal()
                 }).ToList(),
-                Cliente = new ClienteModel
-                {
-                    Id = ordemServico.Cliente.Id,
-                    Nome = ordemServico.Cliente.Nome,
-                    Email = ordemServico.Cliente.Email,
-                    Telefone = ordemServico.Cliente.Telefone
-                }
+                Cliente = ordemServico.Cliente == null
+                    ? new ClienteModel { Id = ordemServico.ClienteId }
+                    : new ClienteModel
+                    {
+                        Id = ordemServico.Cliente.Id,
+                        Nome = ordemServico.Cliente.Nome,
+                        Email = ordemServico.Cliente.Email,
+                        Telefone = ordemServico.Cliente.Telefone
+                    }
             };
         }
     }
