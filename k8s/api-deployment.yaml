@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Deployment da API .NET para o ambiente local do Tech Challenge
+  name: api
+  namespace: tech-challenge
+  labels:
+    app: tech-challenge
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tech-challenge
+      component: api
+  template:
+    metadata:
+      labels:
+        app: tech-challenge
+        component: api
+    spec:
+      containers:
+        - name: api
+          image: tech-challenge-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: tech-challenge-config
+            - secretRef:
+                name: tech-challenge-secret
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8080
+            - name: ConnectionStrings__DefaultConnection
+              value: Host=postgres;Port=5432;Database=tech-challenge;Username=postgres;Password=postgres
+          readinessProbe:
+            httpGet:
+              path: /swagger/index.html
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /swagger/index.html
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 20

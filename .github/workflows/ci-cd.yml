@@ -1,16 +1,10 @@
 name: CI/CD Tech Challenge
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - develop
   pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - main
-      - master
-      - develop
   workflow_dispatch:
 
 env:
@@ -19,6 +13,7 @@ env:
 
 jobs:
   build-and-test:
+    if: github.event_name != 'pull_request' || github.event.action != 'closed' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -41,7 +36,7 @@ jobs:
 
   docker-build-and-publish:
     needs: build-and-test
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +64,7 @@ jobs:
 
   deploy-kubernetes:
     needs: docker-build-and-publish
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -87,6 +82,4 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/postgres.yaml
-          kubectl apply -f k8s/api.yaml
+          kubectl apply -f k8s/
