@@ -1,33 +1,43 @@
 services:
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: postgres_db
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: tech-challenge
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-tech-challenge}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./init.sql:/init.sql
-      - ./init-always.sh:/init-always.sh
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init-always.sh:/init-always.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-tech-challenge}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     command: ["/bin/bash", "-c", "docker-entrypoint.sh postgres & sleep 10 && bash /init-always.sh && wait"]
 
   api:
-    image: tech-challenge-api:latest
+    image: ${API_IMAGE:-tech-challenge-api:latest}
     container_name: tech_challenge_api
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      target: runtime
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "${API_PORT:-8080}:8080"
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=tech-challenge;Username=postgres;Password=postgres    
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=${POSTGRES_DB:-tech-challenge};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
 
 volumes:
   db_data:
