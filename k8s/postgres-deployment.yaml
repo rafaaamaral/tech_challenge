@@ -7,40 +7,54 @@ metadata:
   labels:
     app: tech-challenge
     component: postgres
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: tech-challenge
       component: postgres
+
   template:
     metadata:
       labels:
         app: tech-challenge
         component: postgres
+
     spec:
       containers:
         - name: postgres
           image: postgres:16
           imagePullPolicy: IfNotPresent
+
           ports:
             - containerPort: 5432
+
           env:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: tech-challenge-config
                   key: POSTGRES_DB
+
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: tech-challenge-secret
                   key: POSTGRES_USER
+
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: tech-challenge-secret
                   key: POSTGRES_PASSWORD
+
+          # Persistência dos dados
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+
           readinessProbe:
             exec:
               command:
@@ -49,6 +63,7 @@ spec:
                 - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
             initialDelaySeconds: 10
             periodSeconds: 10
+
           livenessProbe:
             exec:
               command:
@@ -57,3 +72,8 @@ spec:
                 - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
             initialDelaySeconds: 20
             periodSeconds: 20
+
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc

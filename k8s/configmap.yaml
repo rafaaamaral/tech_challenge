@@ -10,8 +10,11 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: Production
   POSTGRES_DB: tech-challenge
-  SMTP_HOST: smtp.example.com
-  SMTP_PORT: "587"
-  API_BASE_URL: http://api.tech-challenge.svc.cluster.local:8080
+  Email__Host: host.docker.internal
+  Email__Port: "25"
+  Email__From: no-reply@techchallenge.com
+  Email__DisplayName: Oficina Mecânica Tech-Challenge
+  Email__EnableSsl: "false"
+  Email__ApiBaseUrl: http://localhost:30080
   Jwt__Issuer: TechChallengeAPI
   Jwt__Audience: TechChallengeAPI

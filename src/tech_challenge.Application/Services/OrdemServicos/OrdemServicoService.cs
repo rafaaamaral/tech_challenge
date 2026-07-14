@@ -226,7 +226,6 @@ namespace tech_challenge.Application.Services.OrdemServicos
             {
                 case StatusOrcamento.Aprovado:
                     ordemServico.AprovarOrcamento();
-                    ordemServico.IniciarExecucao();
                     break;
                 case StatusOrcamento.Reprovado:
                     ordemServico.ReprovarOrcamento();

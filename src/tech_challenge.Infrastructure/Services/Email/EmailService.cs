@@ -20,9 +20,9 @@ namespace tech_challenge.Infrastructure.Services.Email
         }
         public async Task EnviarEmailAprovacaoOrcamentoAsync(OrdemServicoModel ordemServico, CancellationToken cancellationToken = default)
         {
-            var urlAprovacao = $"{_settings.ApiBaseUrl}/api/ordemservico/orcamentos/aprovacao?uniqueCode={ordemServico.UniqueCode}&aprovado={StatusOrcamento.Aprovado}";
+            var urlAprovacao = $"{_settings.ApiBaseUrl}/api/ordemservico/orcamentos/aprovacao?uniqueCode={ordemServico.UniqueCode}&status={StatusOrcamento.Aprovado}";
 
-            var urlReprovacao = $"{_settings.ApiBaseUrl}/api/ordemservico/orcamentos/aprovacao?uniqueCode={ordemServico.UniqueCode}&aprovado={StatusOrcamento.Reprovado}";
+            var urlReprovacao = $"{_settings.ApiBaseUrl}/api/ordemservico/orcamentos/aprovacao?uniqueCode={ordemServico.UniqueCode}&status={StatusOrcamento.Reprovado}";
 
             var body = EmailTemplate.GerarEmailAprovacaoOrcamento(
                     ordemServico.Numero,
