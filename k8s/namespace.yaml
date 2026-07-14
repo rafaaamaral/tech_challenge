@@ -4,3 +4,4 @@ metadata:
   name: tech-challenge
   labels:
     app: tech-challenge
+    component: platform
