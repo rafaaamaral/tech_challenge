@@ -13,3 +13,5 @@ data:
   SMTP_HOST: smtp.example.com
   SMTP_PORT: "587"
   API_BASE_URL: http://api.tech-challenge.svc.cluster.local:8080
+  Jwt__Issuer: TechChallengeAPI
+  Jwt__Audience: TechChallengeAPI

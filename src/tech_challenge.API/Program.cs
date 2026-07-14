@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Reflection;
@@ -83,20 +84,18 @@ public partial class Program
         app.UseAuthorization();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        app.UseSwagger();
+        //app.MapOpenApi();
+        app.UseSwaggerUI(options =>
         {
-            app.UseSwagger();
-            //app.MapOpenApi();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech Challenge API v1");
-            });
-        }
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech Challenge API v1");
+        });
 
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+            await context.Database.MigrateAsync();
             await DbSeeder.SeedAsync(context);
         }
 

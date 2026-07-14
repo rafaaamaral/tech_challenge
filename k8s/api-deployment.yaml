@@ -34,7 +34,10 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://+:8080
             - name: ConnectionStrings__DefaultConnection
-              value: Host=postgres;Port=5432;Database=tech-challenge;Username=postgres;Password=postgres
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-secret
+                  key: ConnectionStrings__DefaultConnection
           readinessProbe:
             httpGet:
               path: /swagger/index.html

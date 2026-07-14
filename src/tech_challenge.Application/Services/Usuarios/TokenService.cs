@@ -19,14 +19,17 @@ namespace tech_challenge.Application.Services.Usuarios
         public string GerarToken(UsuarioModel usuario)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
+            var expirationMinutes = int.TryParse(jwtSettings["ExpirationMinutes"], out var parsedExpirationMinutes)
+                ? parsedExpirationMinutes
+                : 120;
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, usuario.UniqueCode.ToString()),
-            new Claim(ClaimTypes.Name, usuario.Nome),
-            new Claim(ClaimTypes.Email, usuario.Login),
-            new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
-        };
+                new Claim(ClaimTypes.NameIdentifier, usuario.UniqueCode.ToString()),
+                new Claim(ClaimTypes.Name, usuario.Nome),
+                new Claim(ClaimTypes.Email, usuario.Login),
+                new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
+            };
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings["Secret"]!)
@@ -41,9 +44,7 @@ namespace tech_challenge.Application.Services.Usuarios
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(
-                    int.Parse(jwtSettings["ExpirationMinutes"]!)
-                ),
+                expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
                 signingCredentials: credentials
             );
 

@@ -94,5 +94,39 @@ namespace tech_challenge.Teste.Application.Usuarios
             Assert.True(jwtToken.ValidTo > DateTime.UtcNow);
             Assert.True(jwtToken.ValidTo <= DateTime.UtcNow.AddMinutes(61));
         }
+
+        [Fact]
+        public void GerarToken_DeveUsarExpiracaoPadraoQuandoConfiguracaoNaoInformada()
+        {
+            // Arrange
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["Jwt:Issuer"] = "TechChallenge",
+                    ["Jwt:Audience"] = "TechChallenge",
+                    ["Jwt:Secret"] = "MINHA_CHAVE_SECRETA_GRANDE_PARA_TESTES_123456"
+                })
+                .Build();
+
+            var service = new TokenService(configuration);
+            var usuario = new UsuarioModel
+            {
+                UniqueCode = Guid.NewGuid(),
+                Nome = "Rafael Amaral",
+                Login = "rafael@email.com",
+                Perfil = PerfilUsuario.Cliente,
+                Senha = "senha123"
+            };
+
+            // Act
+            var token = service.GerarToken(usuario);
+
+            // Assert
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            Assert.True(jwtToken.ValidTo > DateTime.UtcNow);
+            Assert.True(jwtToken.ValidTo <= DateTime.UtcNow.AddMinutes(121));
+        }
     }
 }
