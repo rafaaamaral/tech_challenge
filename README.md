@@ -1,166 +1,230 @@
 # Tech Challenge – Leandro Cordeiro e Rafael Bastos Amaral
 
-## 📖 Sobre o Projeto
-Este é o MVP da Tech Challenge Fase 1
+## Sobre o Projeto
+Este repositório contém a entrega da **Fase 2** do Tech Challenge da pós-graduação em Arquitetura de Software.
 
+O projeto foi desenvolvido em **.NET 10**, com foco em boas práticas de arquitetura, domínio de negócio e operação em ambiente conteinerizado, mantendo uma abordagem orientada a portfólio profissional.
 
-## 🚀 Subindo o ambiente
-> **Pré-requisitos:**
-> - Docker instalado → [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
-> - Docker Compose (já incluso no Docker Desktop)
-> - Kubernetes cluster (opcional para deploy) e Terraform (opcional para IaC)
+## Tecnologias
+- .NET 10
+- Arquitetura Hexagonal
+- DDD
+- EF Core
+- PostgreSQL 16
+- JWT
+- Docker
+- Docker Compose
+- Kubernetes
+- Terraform
+- GitHub Actions
+- xUnit
 
-### 1. Clone o repositório
+## Arquitetura
+- Arquitetura Hexagonal
+- Services representam os casos de uso
+- Sem CQRS
+- Aggregate Roots:
+  - Cliente
+  - OrdemServico
+  - Estoque
+
+## Funcionalidades implementadas
+- Cadastro de clientes
+- Cadastro de veículos
+- Cadastro de estoque
+- Abertura de Ordem de Serviço
+- Consulta de Ordem de Serviço
+- Listagem de Ordens de Serviço
+- Aprovação/Reprovação de orçamento via Webhook
+- Envio de e-mail para aprovação de orçamento
+- Alteração automática do status da OS após aprovação/reprovação
+- Autenticação JWT
+
+## Arquitetura da Solução
+```text
+Cliente
+  ↓
+API REST
+  ↓
+Application
+  ↓
+Domain
+  ↓
+Infrastructure
+  ↓
+PostgreSQL
+```
+
+## Estrutura do Projeto
+```text
+src/
+├── tech_challenge.API
+├── tech_challenge.Application
+├── tech_challenge.Domain
+├── tech_challenge.Infrastructure
+└── tech_challenge.Teste
+```
+
+Descrição das camadas da Arquitetura Hexagonal:
+
+- **API**: camada de entrada HTTP (controllers, requests/responses, autenticação, middlewares).
+- **Application**: casos de uso da aplicação (services), orquestração das regras e contratos (interfaces).
+- **Domain**: núcleo do negócio, entidades, agregados, enums e validações de domínio.
+- **Infrastructure**: persistência com EF Core/PostgreSQL, implementações de repositórios e integrações externas.
+- **Teste**: testes automatizados unitários e de integração.
+
+## Infraestrutura
+O projeto possui estrutura completa para execução e operação:
+
+- **Docker**: empacotamento da aplicação.
+- **Docker Compose**: orquestração local da API e banco PostgreSQL.
+- **Kubernetes**: manifests de Deployments, Services, ConfigMap, Secret e HPA.
+- **Terraform**: provisionamento de infraestrutura.
+- **GitHub Actions**: automação de CI/CD.
+
+## CI/CD
+Fluxo resumido da pipeline:
+
+```text
+GitHub
+  ↓
+GitHub Actions
+  ↓
+Build
+  ↓
+Testes
+  ↓
+Docker Build
+  ↓
+Docker Push
+  ↓
+Deploy Kubernetes
+```
+
+A pipeline executa:
+- Restore
+- Build
+- Testes automatizados
+- Build da imagem Docker
+- Push da imagem
+- Deploy dos manifestos Kubernetes
+
+## Escalabilidade
+A API utiliza **Horizontal Pod Autoscaler (HPA)** configurado para escalar automaticamente entre **2 e 5 réplicas**, conforme utilização de CPU.
+
+## Execução Local
+
+### 1. Clonar o projeto
 ```bash
 git clone https://github.com/rafaaamaral/tech_challenge_fase1
 cd tech_challenge_fase1
 ```
-### 2. Suba os containers
 
+### 2. Restaurar dependências
 ```bash
-docker-compose -f docker/docker-compose.yml up -d
-```
-### 3. Verifique se o banco está rodando
-
-```bash
-docker ps
-```
-
-Você deve ver algo como:
-
-```
-CONTAINER ID   IMAGE          STATUS          PORTS
-123abc456def   postgres:16    Up 5 minutes    0.0.0.0:5432->5432/tcp
-```
-
----
-
-## 🗄️ Banco de Dados
-
-**PostgreSQL 16**
-
-| Configuração | Valor |
-|---------------|--------|
-| Host | `localhost` |
-| Porta | `5432` |
-| Banco | `tech-challenge` |
-| Usuário | `postgres` |
-| Senha | `postgres` |
-
-### Conexão no .NET
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=service-order;Username=postgres;Password=postgres"
-  }
-}
-```
-
-## 📁 Estrutura do Projeto
-```
-src/
-├── tech_challenge.API → Projeto de inicialização (Startup)
-├── tech_challenge.Infrastructure → Contém o DbContext e configurações de persistência
-├── tech_challenge.Application/ # Casos de uso, DTOs, handlers
-├── tech_challenge.Domain → Contém as entidades de domínio
-```
-
-## 🛠️ Requisitos
-- .NET 10 ou superior
-- Ferramentas do EF instaladas:
-```
-dotnet tool install --global dotnet-ef --version (versao do EF)
-```
-
-## 🚀 Criando uma nova migration
-Execute no diretório raiz do projeto:
-```
-dotnet ef migrations add NomeDaMigration -p src/tech_challenge.Infrastructure -s src/challenge.API
-```
-## 🛠️ Atualizando o banco de dados
-```
-dotnet ef database update -p src/tech_challenge.Infrastructure -s src/tech_challenge.API
-```
-
-## Observações
-- A migration deve sempre ser criada apontando **Infrastructure como projeto de persistência** e **API como startup**.
-- Em caso de erro de caminho, confirme se está dentro da pasta correta ao executar o comando.
-
-## 📦 Restaurar dependências
-```
 dotnet restore
 ```
-## 🧪 Compilar a solução
-```
-dotnet build
-````
-## 🏃 Rodar o projeto
-```
-dotnet run --project src/tech_challenge.API
+
+### 3. Executar via Docker Compose
+```bash
+docker compose -f docker/docker-compose.yml up -d --build
 ```
 
-## 🧪 Testes Automatizados e Cobertura
-Conforme solicitado no documento, o projeto possui testes automatizados com focos nos domínios críticos
+### 4. Acessar Swagger
+Com a aplicação em execução, acesse:
 
-## ▶️ Executando os testes
+- `http://localhost:8080/swagger`
 
-Para rodar todos os testes:
-```
-dotnet test
-```
+## Execução no Kubernetes
 
-## 📊 Gerando cobertura de código
-Para executar os testes com coleta de cobertura:
-```
-Remove-Item -Recurse -Force src/tech_challenge.Teste/TestResults -ErrorAction Ignore
-dotnet test --collect:"XPlat Code Coverage"
-```
-
-## 📈 Gerando relatório HTML
-Instale a ferramenta de geração de relatório (caso ainda não tenha):
-```
-dotnet tool install -g dotnet-reportgenerator-globaltool
-```
-Em seguida, execute:
-```
-reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
-```
-
-## 🌐 Visualizando o relatório
-Abra o arquivo:
-```
-coveragereport/index.html
-
-```
-ou execute:
-```
-start coveragereport/index.html
-```
-
-## 🧰 Comandos úteis
-
-## 🐳 Docker
-Estar na raiz do repositório
-
-| Ação | Comando |
-|------|----------|
-| Subir containers | `docker compose -f docker/docker-compose.yml up -d --build` |
-| Parar containers | `docker compose -f docker/docker-compose.yml down` |
-| Ver logs | `docker compose -f docker/docker-compose.yml logs -f` |
-| Acessar banco via terminal | `docker exec -it postgres_db psql -U postgres -d tech-challenge` |
-
-## ☸️ Kubernetes
-Os manifests foram organizados em [k8s](k8s):
-
+### 1. Aplicar manifestos
 ```bash
 kubectl apply -f k8s/namespace.yaml
 kubectl apply -f k8s/postgres.yaml
 kubectl apply -f k8s/api.yaml
 ```
 
-## 🏗️ Terraform
-A estrutura básica de provisionamento está em [terraform](terraform):
+### 2. Verificar Pods
+```bash
+kubectl get pods -n tech-challenge
+```
 
+### 3. Verificar Services
+```bash
+kubectl get svc -n tech-challenge
+```
+
+### 4. Verificar HPA
+```bash
+kubectl get hpa -n tech-challenge
+```
+
+### 5. Acessar a aplicação
+Exponha o service conforme sua estratégia de cluster (LoadBalancer/NodePort/Ingress) e acesse o endpoint público da API.
+
+## Banco de Dados
+
+**PostgreSQL 16**
+
+| Configuração | Valor |
+|---|---|
+| Host | `localhost` |
+| Porta | `5432` |
+| Banco | `tech-challenge` |
+| Usuário | `postgres` |
+| Senha | `postgres` |
+
+Exemplo de connection string:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=tech-challenge;Username=postgres;Password=postgres"
+  }
+}
+```
+
+## Testes
+O projeto possui testes automatizados com **xUnit**, cobrindo:
+
+- **Testes unitários**: validação de regras de domínio e casos de uso da aplicação.
+- **Testes de integração**: validação ponta a ponta da API (HTTP → Controller → Service → Repository → Banco), incluindo fluxos críticos de autenticação e Ordem de Serviço.
+
+Para executar os testes:
+
+```bash
+dotnet test
+```
+
+## Migrations e Banco
+
+Criar migration (na raiz do projeto):
+
+```bash
+dotnet ef migrations add NomeDaMigration -p src/tech_challenge.Infrastructure -s src/tech_challenge.API
+```
+
+Atualizar banco de dados:
+
+```bash
+dotnet ef database update -p src/tech_challenge.Infrastructure -s src/tech_challenge.API
+```
+
+Observações:
+- Utilize sempre **Infrastructure** como projeto de persistência.
+- Utilize sempre **API** como startup project.
+
+## Comandos úteis
+
+### Docker
+| Ação | Comando |
+|---|---|
+| Subir containers | `docker compose -f docker/docker-compose.yml up -d --build` |
+| Parar containers | `docker compose -f docker/docker-compose.yml down` |
+| Ver logs | `docker compose -f docker/docker-compose.yml logs -f` |
+| Acessar banco via terminal | `docker exec -it postgres_db psql -U postgres -d tech-challenge` |
+
+### Terraform
 ```bash
 cd terraform
 terraform init
@@ -168,4 +232,4 @@ terraform plan
 terraform apply
 ```
 
-> Ajuste o caminho do kubeconfig em [terraform/main.tf](terraform/main.tf) conforme o seu cluster.
+> Ajuste o caminho do kubeconfig em `terraform/main.tf` conforme o seu cluster.
