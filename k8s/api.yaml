@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tech-challenge-api-secret
+  namespace: tech-challenge
+type: Opaque
+stringData:
+  ConnectionStrings__DefaultConnection: Host=tech-challenge-db;Port=5432;Database=tech-challenge;Username=postgres;Password=postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tech-challenge-api
+  namespace: tech-challenge
+spec:
+  selector:
+    app: tech-challenge-api
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-api
+  namespace: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tech-challenge-api
+  template:
+    metadata:
+      labels:
+        app: tech-challenge-api
+    spec:
+      containers:
+        - name: api
+          image: tech-challenge-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_URLS
+              value: http://+:8080
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-api-secret
+                  key: ConnectionStrings__DefaultConnection

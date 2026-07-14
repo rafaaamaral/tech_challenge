@@ -8,6 +8,7 @@ Este é o MVP da Tech Challenge Fase 1
 > **Pré-requisitos:**
 > - Docker instalado → [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
 > - Docker Compose (já incluso no Docker Desktop)
+> - Kubernetes cluster (opcional para deploy) e Terraform (opcional para IaC)
 
 ### 1. Clone o repositório
 ```bash
@@ -143,7 +144,28 @@ Estar na raiz do repositório
 
 | Ação | Comando |
 |------|----------|
-| Subir containers | `docker-compose -f docker/docker-compose.yml up -d` |
-| Parar containers | `docker-compose -f docker/docker-compose.yml down` |
-| Ver logs | `docker-compose -f docker/docker-compose.yml logs -f` |
-| Acessar banco via terminal | `docker exec -it postgres_main psql -U postgres -d tech-challenge` |
+| Subir containers | `docker compose -f docker/docker-compose.yml up -d --build` |
+| Parar containers | `docker compose -f docker/docker-compose.yml down` |
+| Ver logs | `docker compose -f docker/docker-compose.yml logs -f` |
+| Acessar banco via terminal | `docker exec -it postgres_db psql -U postgres -d tech-challenge` |
+
+## ☸️ Kubernetes
+Os manifests foram organizados em [k8s](k8s):
+
+```bash
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/api.yaml
+```
+
+## 🏗️ Terraform
+A estrutura básica de provisionamento está em [terraform](terraform):
+
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+> Ajuste o caminho do kubeconfig em [terraform/main.tf](terraform/main.tf) conforme o seu cluster.
