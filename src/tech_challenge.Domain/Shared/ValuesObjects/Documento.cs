@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using tech_challenge.Domain.Exceptions;
 
-namespace tech_challenge.Domain.Aggregates.Clientes
+namespace tech_challenge.Domain.Shared.ValuesObjects
 {
     public class Documento
     {

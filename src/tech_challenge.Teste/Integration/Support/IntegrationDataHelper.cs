@@ -37,7 +37,7 @@ namespace tech_challenge.Teste.Integration.Support
         public static async Task<Usuario> SeedClienteUsuarioAsync(AppDbContext context, Cliente cliente)
         {
             var sufixo = Guid.NewGuid().ToString("N")[..8];
-            var usuario = Usuario.Criar(cliente.UniqueCode, $"Cliente Usuario {sufixo}", $"cliente.usuario.{sufixo}@email.com", PerfilUsuario.Cliente);
+            var usuario = Usuario.Criar(cliente.UniqueCode, $"Cliente Usuario {sufixo}", $"cliente.usuario.{sufixo}@email.com", "899.165.050-39", PerfilUsuario.Cliente);
 
             await context.Usuarios.AddAsync(usuario);
             await context.SaveChangesAsync();

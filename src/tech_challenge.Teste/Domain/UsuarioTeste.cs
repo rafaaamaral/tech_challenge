@@ -17,6 +17,7 @@ namespace tech_challenge.Teste.Domain
                 Guid.NewGuid(),
                 "Rafael Amaral",
                 "rafael.amaral@example.com",
+                "899.165.050-39",
                 PerfilUsuario.Administrador
             );
             usuario.Nome.Should().Be("Rafael Amaral");
@@ -30,6 +31,7 @@ namespace tech_challenge.Teste.Domain
                 Guid.NewGuid(),
                 "",
                 "",
+                string.Empty,
                 PerfilUsuario.Administrador);
 
             act.Should()
@@ -44,6 +46,7 @@ namespace tech_challenge.Teste.Domain
                 Guid.NewGuid(),
                 "Rafael Amaral",
                 "",
+                "899.165.050-39",
                 PerfilUsuario.Administrador);
             act.Should()
                .Throw<DomainException>()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using tech_challenge.Domain.Aggregates.Usuarios;
 using tech_challenge.Domain.Common.Enums;
+using tech_challenge.Domain.Shared.ValuesObjects;
 
 namespace tech_challenge.Infrastructure.Persistence.Context.Data
 {
@@ -17,6 +18,7 @@ namespace tech_challenge.Infrastructure.Persistence.Context.Data
                     Nome = "Atendimento",
                     Login = "atendimento@techchallengefase1.com",
                     Senha = senhaHash,
+                    Documento = new Documento("899.165.050-39"),
                     Perfil = PerfilUsuario.Atendimento
                 };
 
@@ -30,6 +32,7 @@ namespace tech_challenge.Infrastructure.Persistence.Context.Data
                     Nome = "Mecânico",
                     Login = "mecanico@techchallengefase1.com",
                     Senha = senhaHash,
+                    Documento = new Documento("899.165.050-39"),
                     Perfil = PerfilUsuario.Mecanico
                 };
 

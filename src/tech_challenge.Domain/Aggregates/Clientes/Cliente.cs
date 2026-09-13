@@ -1,5 +1,6 @@
 ﻿using tech_challenge.Domain.Common.Entities;
 using tech_challenge.Domain.Exceptions;
+using tech_challenge.Domain.Shared.ValuesObjects;
 
 namespace tech_challenge.Domain.Aggregates.Clientes
 {

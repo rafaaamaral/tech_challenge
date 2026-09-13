@@ -15,6 +15,10 @@ namespace tech_challenge.Infrastructure.Persistence.Configuration
 
             builder.Property(c => c.Nome).IsRequired().HasMaxLength(100);
             builder.Property(c => c.Login).IsRequired().HasMaxLength(50);
+            builder.OwnsOne(c => c.Documento, d =>
+            {
+                d.Property(p => p.Valor).IsRequired().HasMaxLength(20).HasColumnName("Documento");
+            });
             builder.Property(c => c.Senha).IsRequired().HasMaxLength(200);
             builder.Property(c => c.Perfil).IsRequired().HasConversion<int>();
         }

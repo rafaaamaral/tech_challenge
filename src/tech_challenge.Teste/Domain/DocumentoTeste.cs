@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using tech_challenge.Domain.Aggregates.Clientes;
 using tech_challenge.Domain.Exceptions;
+using tech_challenge.Domain.Shared.ValuesObjects;
 
 namespace tech_challenge.Teste.Domain
 {

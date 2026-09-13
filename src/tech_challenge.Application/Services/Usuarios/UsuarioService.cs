@@ -25,6 +25,7 @@ namespace tech_challenge.Application.Services.Usuarios
                 UniqueCode = usuario.UniqueCode,
                 Nome = usuario.Nome,
                 Login = usuario.Login,
+                Documento = usuario.Documento.Valor,
                 Senha = usuario.Senha,
                 Perfil = usuario.Perfil
             };

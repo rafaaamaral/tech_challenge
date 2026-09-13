@@ -39,6 +39,7 @@ namespace tech_challenge.Teste.Application.Usuarios
                 Nome = "Rafael Amaral",
                 Login = "rafael@email.com",
                 Perfil = PerfilUsuario.Cliente,
+                Documento = "899.165.050-39",
                 Senha = "senha123"
             };
 
@@ -81,6 +82,7 @@ namespace tech_challenge.Teste.Application.Usuarios
                 Nome = "Rafael Amaral",
                 Login = "rafael@email.com",
                 Perfil = PerfilUsuario.Cliente,
+                Documento = "899.165.050-39",
                 Senha = "senha123"
             };
 
@@ -115,6 +117,7 @@ namespace tech_challenge.Teste.Application.Usuarios
                 Nome = "Rafael Amaral",
                 Login = "rafael@email.com",
                 Perfil = PerfilUsuario.Cliente,
+                Documento = "899.165.050-39",
                 Senha = "senha123"
             };
 

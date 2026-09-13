@@ -44,7 +44,7 @@ namespace tech_challenge.Application.Services.Clientes
 
             _logger.LogInformation("Criando usuário para o cliente com UniqueCode: {UniqueCode}", result.UniqueCode);
 
-            var usuario = Usuario.Criar(cliente.UniqueCode, cliente.Nome, cliente.Email, PerfilUsuario.Cliente);
+            var usuario = Usuario.Criar(cliente.UniqueCode, cliente.Nome, cliente.Email, cliente.Documento.Valor, PerfilUsuario.Cliente);
 
             await _usuarioRepository.AddAsync(usuario);
 

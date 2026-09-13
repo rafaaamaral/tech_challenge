@@ -33,6 +33,7 @@ namespace tech_challenge.Teste.Application.Usuarios
                 Guid.NewGuid(),
                 "Rafael Amaral",
                 email,
+                "899.165.050-39",
                 PerfilUsuario.Cliente
             );
 
