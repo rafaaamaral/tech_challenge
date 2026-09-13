@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using tech_challenge.Domain.Aggregates.Usuarios;
 using tech_challenge.Domain.Common.Enums;
 using tech_challenge.Domain.Exceptions;
@@ -20,8 +18,12 @@ namespace tech_challenge.Teste.Domain
                 "899.165.050-39",
                 PerfilUsuario.Administrador
             );
+
+            usuario.UniqueCode.Should().NotBeEmpty();
             usuario.Nome.Should().Be("Rafael Amaral");
             usuario.Login.Should().Be("rafael.amaral@example.com");
+            usuario.Documento.Valor.Should().Be("89916505039");
+            usuario.Perfil.Should().Be(PerfilUsuario.Administrador);
         }
 
         [Fact]
@@ -30,8 +32,8 @@ namespace tech_challenge.Teste.Domain
             var act = () => Usuario.Criar(
                 Guid.NewGuid(),
                 "",
-                "",
-                string.Empty,
+                "rafael.amaral@example.com",
+                "899.165.050-39",
                 PerfilUsuario.Administrador);
 
             act.Should()
@@ -51,6 +53,36 @@ namespace tech_challenge.Teste.Domain
             act.Should()
                .Throw<DomainException>()
                .WithMessage("O login do usuário é obrigatório.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Documento_For_Invalido()
+        {
+            var act = () => Usuario.Criar(
+                Guid.NewGuid(),
+                "Rafael Amaral",
+                "rafael.amaral@example.com",
+                "123",
+                PerfilUsuario.Administrador);
+
+            act.Should()
+               .Throw<DomainException>()
+               .WithMessage("Documento inválido.");
+        }
+
+        [Fact]
+        public void Deve_Lancar_Exception_Quando_Documento_For_Vazio()
+        {
+            var act = () => Usuario.Criar(
+                Guid.NewGuid(),
+                "Rafael Amaral",
+                "rafael.amaral@example.com",
+                "",
+                PerfilUsuario.Administrador);
+
+            act.Should()
+               .Throw<DomainException>()
+               .WithMessage("Documento obrigatório.");
         }
     }
 }
