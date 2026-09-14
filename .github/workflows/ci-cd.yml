@@ -109,6 +109,25 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
+      - name: Create Kubernetes secret from AWS Secrets Manager
+        run: |
+          set -e
+          SECRET_JSON="$(aws secretsmanager get-secret-value --secret-id SecretTechChallenge --region ${{ env.AWS_REGION }} --query SecretString --output text)"
+          DB_HOST="$(python3 -c 'import json,sys; s=json.loads(sys.argv[1]); print(s.get("host") or s.get("endpoint") or s.get("hostname") or s.get("rds-host") or "")' "$SECRET_JSON")"
+          DB_NAME="$(python3 -c 'import json,sys; s=json.loads(sys.argv[1]); print(s.get("dbname") or s.get("database") or s.get("db") or "techchallenge")' "$SECRET_JSON")"
+          DB_USER="$(python3 -c 'import json,sys; s=json.loads(sys.argv[1]); print(s.get("username") or s.get("user") or "postgres")' "$SECRET_JSON")"
+          DB_PASSWORD="$(python3 -c 'import json,sys; s=json.loads(sys.argv[1]); print(s.get("password") or s.get("passwd") or "")' "$SECRET_JSON")"
+          DB_PORT="$(python3 -c 'import json,sys; s=json.loads(sys.argv[1]); print(s.get("port") or "5432")' "$SECRET_JSON")"
+
+          kubectl delete secret tech-challenge-secret -n ${{ env.K8S_NAMESPACE }} --ignore-not-found=true || true
+          kubectl create secret generic tech-challenge-secret -n ${{ env.K8S_NAMESPACE }} \
+            --from-literal=POSTGRES_USER="$DB_USER" \
+            --from-literal=POSTGRES_PASSWORD="$DB_PASSWORD" \
+            --from-literal=Email__UserName="" \
+            --from-literal=Email__Password="" \
+            --from-literal=Jwt__Secret="3b45f6b4b1433e9fb87ec4bceef4501d" \
+            --from-literal=ConnectionStrings__DefaultConnection="Host=$DB_HOST;Port=$DB_PORT;Database=$DB_NAME;Username=$DB_USER;Password=$DB_PASSWORD"
+
       - name: Apply Kubernetes manifests
         run: |
           export AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
@@ -116,7 +135,6 @@ jobs:
           envsubst < k8s/api-deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/configmap.yaml
-          kubectl apply -f k8s/secret.yaml
           kubectl apply -f k8s/api-service.yaml
           kubectl apply -f k8s/hpa.yaml
           kubectl rollout status deployment/api -n ${{ env.K8S_NAMESPACE }} --timeout=300s || (
