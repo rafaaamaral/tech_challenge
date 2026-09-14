@@ -100,8 +100,6 @@ public partial class Program
             await DbSeeder.SeedAsync(context);
         }
 
-        app.UseHttpsRedirection();
-
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseMiddleware<ExceptionMiddleware>();
