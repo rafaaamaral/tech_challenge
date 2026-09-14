@@ -1,7 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  # Configurações não sensíveis compartilhadas pela API e pelo PostgreSQL
   name: tech-challenge-config
   namespace: tech-challenge
   labels:
@@ -10,11 +9,12 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: Production
   POSTGRES_DB: tech-challenge
-  Email__Host: host.docker.internal
-  Email__Port: "25"
+  Email__Host: smtp.example.com
+  Email__Port: "587"
   Email__From: no-reply@techchallenge.com
   Email__DisplayName: Oficina Mecânica Tech-Challenge
-  Email__EnableSsl: "false"
-  Email__ApiBaseUrl: http://localhost:30080
+  Email__EnableSsl: "true"
+  Email__ApiBaseUrl: http://api.tech-challenge.svc.cluster.local
   Jwt__Issuer: TechChallengeAPI
   Jwt__Audience: TechChallengeAPI
+  Jwt__ExpirationMinutes: "60"

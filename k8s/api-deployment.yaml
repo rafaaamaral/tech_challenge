@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # Deployment da API .NET para o ambiente local do Tech Challenge
   name: api
   namespace: tech-challenge
   labels:
@@ -21,7 +20,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: tech-challenge-api:latest
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tech-challenge-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -40,13 +39,17 @@ spec:
                   key: ConnectionStrings__DefaultConnection
           readinessProbe:
             httpGet:
-              path: /swagger/index.html
+              path: /health
               port: 8080
-            initialDelaySeconds: 20
-            periodSeconds: 15
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: /swagger/index.html
+              path: /health
               port: 8080
-            initialDelaySeconds: 40
+            initialDelaySeconds: 30
             periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3

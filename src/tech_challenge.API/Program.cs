@@ -45,6 +45,7 @@ public partial class Program
 
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
+        builder.Services.AddHealthChecks();
         //builder.Services.AddOpenApi();
 
         builder.Services.AddSwaggerGen(options =>
@@ -104,6 +105,7 @@ public partial class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseMiddleware<ExceptionMiddleware>();
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
         app.Run();
