@@ -2,12 +2,9 @@ name: Build and Deploy - Development
 
 on:
   push:
-    branches:
+    branches-ignore:
       - main
-      - master
-      - develop
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
