@@ -6,6 +6,9 @@ Este repositório contém a entrega da **Fase 2** do Tech Challenge da pós-grad
 O projeto foi desenvolvido em **.NET 10**, com foco em boas práticas de arquitetura, domínio de negócio e operação em ambiente conteinerizado, mantendo uma abordagem orientada a portfólio profissional.
 
 ## Tecnologias
+
+Observabilidade: [integracao Datadog, Serilog e OpenTelemetry](docs/observabilidade.md).
+
 - .NET 10
 - Arquitetura Hexagonal
 - DDD

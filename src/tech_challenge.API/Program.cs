@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text;
+using Serilog;
+using tech_challenge.API.Observability;
 using tech_challenge.API.Middlewares;
 using tech_challenge.API.Services;
 using tech_challenge.Application.Common.Interfaces;
@@ -19,6 +21,7 @@ public partial class Program
     private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddObservability();
 
         // Add services to the container.
 
@@ -45,7 +48,6 @@ public partial class Program
 
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
-        builder.Services.AddHealthChecks();
         //builder.Services.AddOpenApi();
 
         builder.Services.AddSwaggerGen(options =>
@@ -81,8 +83,9 @@ public partial class Program
         builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.SectionName));
 
         var app = builder.Build();
-        app.UseAuthentication();
-        app.UseAuthorization();
+        app.UseMiddleware<CorrelationIdMiddleware>();
+        app.UseSerilogRequestLogging();
+        app.UseMiddleware<ExceptionMiddleware>();
 
         // Configure the HTTP request pipeline.
         app.UseSwagger();
@@ -102,8 +105,7 @@ public partial class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseMiddleware<ExceptionMiddleware>();
-        app.MapHealthChecks("/health");
+        app.MapObservabilityHealthChecks();
         app.MapControllers();
 
         app.Run();

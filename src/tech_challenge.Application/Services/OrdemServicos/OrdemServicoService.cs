@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using tech_challenge.Application.Observability;
 using tech_challenge.Application.Common.Interfaces;
 using tech_challenge.Application.Exceptions;
 using tech_challenge.Application.Interfaces.Repositories;
@@ -116,7 +117,8 @@ namespace tech_challenge.Application.Services.OrdemServicos
             var orcamentoModel = await ObterPorIdAsync(id);
             try
             {
-                await _emailService.EnviarEmailAprovacaoOrcamentoAsync(orcamentoModel);
+                await OrdemServicoTelemetry.ExecuteAsync("enviar_email_orcamento",
+                    () => _emailService.EnviarEmailAprovacaoOrcamentoAsync(orcamentoModel), _logger, id);
             }
             catch (Exception ex)
             {
