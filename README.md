@@ -7,7 +7,7 @@ O projeto foi desenvolvido em **.NET 10**, com foco em boas práticas de arquite
 
 ## Tecnologias
 
-Observabilidade da TC3-10: [integracao Datadog, Serilog e OpenTelemetry](docs/observabilidade.md).
+Observabilidade: [integracao Datadog, Serilog e OpenTelemetry](docs/observabilidade.md).
 
 - .NET 10
 - Arquitetura Hexagonal

@@ -1,4 +1,4 @@
-# TC3-10: Observabilidade
+# Observabilidade
 
 ## O papel de cada componente
 
