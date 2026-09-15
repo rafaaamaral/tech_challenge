@@ -131,9 +131,9 @@ jobs:
         run: |
           export AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
           export AWS_REGION="${{ env.AWS_REGION }}"
-          envsubst < k8s/api-deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/configmap.yaml
+          envsubst '${AWS_ACCOUNT_ID} ${AWS_REGION} ${IMAGE_TAG}' < k8s/api-deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/api-service.yaml
           kubectl apply -f k8s/hpa.yaml
           kubectl rollout status deployment/api -n ${{ env.K8S_NAMESPACE }} --timeout=300s || (

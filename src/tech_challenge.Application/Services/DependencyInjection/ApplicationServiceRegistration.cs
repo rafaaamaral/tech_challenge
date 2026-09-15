@@ -21,7 +21,8 @@ namespace tech_challenge.Application.Services.DependencyInjection
         public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<IClienteService, ClienteService>();
-            services.AddScoped<IOrdemServicoService, OrdemServicoService>();
+            services.AddScoped<OrdemServicoService>();
+            services.AddScoped<IOrdemServicoService, ObservedOrdemServicoService>();
             services.AddScoped<IPecaInsumoService, PecaInsumoService>();
             services.AddScoped<IServicoService, ServicoService>();
             services.AddScoped<IUsuarioService, UsuarioService>();

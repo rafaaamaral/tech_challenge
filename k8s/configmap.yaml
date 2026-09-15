@@ -7,6 +7,7 @@ metadata:
     app: tech-challenge
     component: config
 data:
+  Observability__Enabled: "true"
   ASPNETCORE_ENVIRONMENT: Production
   POSTGRES_DB: tech-challenge
   Email__Host: smtp.example.com

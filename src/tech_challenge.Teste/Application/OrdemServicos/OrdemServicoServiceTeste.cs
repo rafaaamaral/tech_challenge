@@ -15,6 +15,7 @@ using tech_challenge.Domain.Common.Enums;
 
 namespace tech_challenge.Teste.Application.OrdemServicos
 {
+    [Collection("Observability")]
     public class OrdemServicoServiceTeste
     {
         private readonly Mock<IOrdemServicoRepository> _ordemServicoRepositoryMock;
@@ -271,6 +272,35 @@ namespace tech_challenge.Teste.Application.OrdemServicos
             // Assert
             Assert.Equal(StatusOrdemServico.AguardandoAprovacao, result.Status);
             Assert.Equal(StatusOrcamento.Pendente, result.Orcamento.Status);
+            _ordemServicoRepositoryMock.Verify(x => x.UpdateAsync(ordemServico), Times.Once);
+        }
+
+        [Fact]
+        public async Task GerarOrcamentoAsync_FalhaEmailTemTraceProprioSemFalharOrcamento()
+        {
+            var ordemServico = CriarOrdemServicoComItens();
+            _ordemServicoRepositoryMock.Setup(x => x.ObterPorIdComItensAsync(ordemServico.Id)).ReturnsAsync(ordemServico);
+            _emailServiceMock.Setup(x => x.EnviarEmailAprovacaoOrcamentoAsync(It.IsAny<OrdemServicoModel>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new System.Net.Mail.SmtpException("SMTP unavailable"));
+            var spans = new List<System.Diagnostics.Activity>();
+            using var listener = new System.Diagnostics.ActivityListener
+            {
+                ShouldListenTo = source => source.Name == tech_challenge.Application.Observability.OrdemServicoTelemetry.SourceName,
+                Sample = (ref System.Diagnostics.ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => System.Diagnostics.ActivitySamplingResult.AllDataAndRecorded,
+                ActivityStopped = activity => spans.Add(activity)
+            };
+            System.Diagnostics.ActivitySource.AddActivityListener(listener);
+            var observed = new ObservedOrdemServicoService(_service,
+                Microsoft.Extensions.Logging.Abstractions.NullLogger<ObservedOrdemServicoService>.Instance);
+
+            var result = await observed.GerarOrcamentoAsync(ordemServico.Id);
+
+            Assert.Equal(StatusOrdemServico.AguardandoAprovacao, result.Status);
+            var email = Assert.Single(spans, span => span.OperationName == "os.enviar_email_orcamento");
+            var budget = Assert.Single(spans, span => span.OperationName == "os.gerar_orcamento");
+            Assert.Equal(System.Diagnostics.ActivityStatusCode.Error, email.Status);
+            Assert.Equal(System.Diagnostics.ActivityStatusCode.Ok, budget.Status);
+            Assert.Equal(budget.SpanId, email.ParentSpanId);
             _ordemServicoRepositoryMock.Verify(x => x.UpdateAsync(ordemServico), Times.Once);
         }
 
